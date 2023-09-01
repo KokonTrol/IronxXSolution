@@ -1,0 +1,72 @@
+﻿<Window x:Class="IronxXSolution.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IronxXSolution"
+        mc:Ignorable="d"
+        Title="Учет оплаты клуба" MinHeight="250" MinWidth="500"
+        Height="250" Width="500"
+        WindowStartupLocation="CenterScreen">
+    <Grid Background="{StaticResource LightBlueStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu  Grid.Row="0" 
+               Background="{StaticResource DarkBlueStyle}" 
+               Foreground="White"
+               VerticalContentAlignment="Center"
+               FontWeight="Bold">
+            <MenuItem Header="Настройки" x:Name="AdminsProperties"
+                      VerticalAlignment="Center" Cursor=""  Click="OpenSettings"/>
+
+            <MenuItem x:Name="ExportExcelMenu" Header="Выгрузить" Click="MenuItem_Click_2"/>
+        </Menu>
+
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="0 -50 0 0"
+                    x:Name="HasAdminsBlock"
+                    Visibility="Collapsed">
+
+            <TextBlock
+                       Text="Выберите администратора" 
+                       Foreground="White"
+                FontSize="{StaticResource TitleFontSize}"
+                FontWeight="Bold"
+                HorizontalAlignment="Center"/>
+            <ComboBox x:Name="chooseAdminList" 
+                      SelectionChanged="chooseAdminList_SelectionChanged"
+                      Padding="10 5 10 5"
+                      HorizontalContentAlignment="Center"/>
+            <Button
+                Content="Enter" 
+                x:Name="EnterButton" Click="EnterButton_Click"/>
+
+            <StackPanel VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                        x:Name="OpenAppPanel"
+                        Visibility="Collapsed"
+                        Orientation="Horizontal">
+                <Button
+                    Content="Касса" Tag="CashierApp"
+                    x:Name="CashierAppName" Click="CashierAppName_Click"/>
+                <Button
+                    Content="Таблица обновлений" Tag="UpdateApp"
+                    x:Name="UpdateApp" Click="CashierAppName_Click"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="0 -50 0 0"
+                    x:Name="HasNotAdminsBlock"
+                    Visibility="Collapsed">
+            <Button
+                Content="Добавить администраторов" Click="OpenSettings"/>
+        </StackPanel>
+    </Grid>
+</Window>

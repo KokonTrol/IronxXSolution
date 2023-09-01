@@ -1,0 +1,147 @@
+﻿<Window x:Class="IronXGameUpdate.EditPCandGames"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:IronXGameUpdate"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Редактировать значения" Height="450" MinWidth="650" MaxWidth="650" Width="650"
+        ShowInTaskbar="True"
+        Icon="pack://application:,,,/StylesResources;component/Images/icon.ico">
+    <!--<Window.DataContext>
+        <local:ViewModelEdit/>
+    </Window.DataContext>-->
+
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+
+        <TabControl x:Name="Tabs" Grid.Row="0" BorderBrush="Transparent"
+                    BorderThickness="0"
+                    >
+            <TabItem Tag="pc" BorderBrush="Transparent" BorderThickness="0">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock Margin="5" Text="Компьютеры"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <!--<ListBox x:Name="listPC" Grid.Row="0" ItemsSource="{Binding PC}" 
+                             Style="{DynamicResource ResourceKey=listBoxSimple}"/>-->
+
+                    <DataGrid x:Name="listPC" 
+                              ItemsSource="{Binding PC,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 HorizontalAlignment="Center"
+                 AutoGenerateColumns="False" 
+                  HorizontalContentAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  ColumnHeaderHeight="35"
+                  CanUserAddRows="False"
+                              SelectionMode="Single"
+                              Background="{DynamicResource LightBlueStyle}">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Имя" Width="*"
+                             Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <DataGridTemplateColumn Header="Цвет" Width="*" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate >
+                                        <xctk:ColorPicker x:Name="colorPicker"
+                                                              SelectedColor="{Binding Path=Color,
+                                    Converter={StaticResource StringToColorConverter},
+                                                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         DisplayColorAndName="True" UsingAlphaChannel="True" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </TabItem.Content>
+            </TabItem>
+
+
+            <TabItem Tag="games" BorderBrush="Transparent" BorderThickness="0">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock Margin="5" Text="Игры"/>
+                    </StackPanel>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <ListBox x:Name="listGames" Grid.Row="0"
+                             ItemsSource="{Binding Games}" Style="{DynamicResource ResourceKey=listBoxSimple}"/>
+                </TabItem.Content>
+
+            </TabItem>
+
+            <TabItem Tag="launchers" BorderBrush="Transparent" BorderThickness="0">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock Margin="5" Text="Лаунчеры"/>
+                    </StackPanel>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <DataGrid x:Name="listLaunchers" 
+                              ItemsSource="{Binding Launchers,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 HorizontalAlignment="Center"
+                 AutoGenerateColumns="False" 
+                  HorizontalContentAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  ColumnHeaderHeight="35"
+                  CanUserAddRows="False"
+                              SelectionMode="Single"
+                              Background="{DynamicResource LightBlueStyle}">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Лаунчер" Width="*" 
+                             Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Логин"  Width="*" 
+                             Binding="{Binding Path=Login,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Пароль"  Width="*" 
+                             Binding="{Binding Path=Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+                </TabItem.Content>
+
+            </TabItem>
+        </TabControl>
+
+
+        <Border Grid.Row="1" BorderThickness="0, 3, 0, 0" BorderBrush="Black">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+
+                <Button 
+                                        Command="{Binding AddItemCommand}" CommandParameter="{Binding ElementName=Tabs, Path=SelectedItem}">
+                    <TextBlock Style="{DynamicResource ResourceKey=ButtonText}" Text="Добавить"/>
+                </Button>
+
+                <Button Command="{Binding DeleteItemCommand}" Cursor="Hand">
+                    <TextBlock Style="{DynamicResource ResourceKey=ButtonText}" Text="Удалить"/>
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MultiValues}">
+                            <Binding ElementName="Tabs" Path="SelectedItem"/>
+                            <Binding ElementName="listPC" Path="SelectedItem"/>
+                            <Binding ElementName="listGames" Path="SelectedItem"/>
+                            <Binding ElementName="listLaunchers" Path="SelectedItem"/>
+
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
