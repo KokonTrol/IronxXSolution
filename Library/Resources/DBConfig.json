@@ -1,0 +1,11 @@
+{
+  "DBName": "ironXsolutionDB",
+  "DBPassword": "fWR2yEm94yh*H0C",
+  "DocumentsFolder": "IronXSolution",
+  "CashierAppName": "IronxXCashier.exe",
+  "CashierAppError": "Невозможно найти исполнительный файл \"IronxXCashier.exe\" для запуска приложения по счетам. Убедитесь, что все файлы программы на месте.",
+  "UpdateAppName": "IronXGameUpdate.exe",
+  "UpdateAppError": "Невозможно найти исполнительный файл \"IronXGameUpdate.exe\" для запуска приложения по отметкам обновлений. Убедитесь, что все файлы программы на месте.",
+  "PasswordError": "Введен неверный пароль пользователя",
+  "EnterAppError": "Неверный запуск приложения."
+}

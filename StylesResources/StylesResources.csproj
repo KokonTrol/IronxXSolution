@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <BaseOutputPath>D:\PUPAGit\IronxXSolution\bin</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Library.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Resource Include="Images\icon.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\icon_accept.png" />
+    <Resource Include="Images\icon_back.png" />
+    <Resource Include="Images\icon_bell.png" />
+    <Resource Include="Images\icon_calendar.png" />
+    <Resource Include="Images\icon_cart.png" />
+    <Resource Include="Images\icon_clock.png" />
+    <Resource Include="Images\icon_creditcard.png" />
+    <Resource Include="Images\icon_danger.png" />
+    <Resource Include="Images\icon_people.png" />
+    <Resource Include="Images\icon_ruble.png" />
+    <Resource Include="Images\icon_save.png" />
+    <Resource Include="Images\icon_shopping.png" />
+    <Resource Include="Images\icon_user.png" />
+    <Resource Include="Images\logoclub.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Styles.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Page>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    
+    <Style TargetType="{x:Type DataGridRow}">
+        <Setter Property="DataGridRow.ToolTip">
+            <Setter.Value>
+                <ToolTip Background="Transparent" BorderThickness="0" Foreground="White" FontWeight="Bold" Margin="0 25 0 0">
+                    <Border CornerRadius="0 10 10 10" Background="{StaticResource LightStyle}" Padding="10">
+                        <Grid>
+                            <Polygon Fill="{StaticResource LightStyle}" Points="0, 0, 30, 30, 0, 30" Margin="-10 -30 0 0"/>
+                            <StackPanel>
+
+                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" Height="Auto">
+                                    <Image Source="..\Images\icon_shopping.png" Style="{StaticResource IconStyle}"/>
+                                    <TextBlock Text="{Binding Path=ProductTypeId,Converter={StaticResource IdTypeToTypeName}}"/>
+                                </StackPanel>
+                                <Separator Background="{StaticResource DarkBlueStyle}"/>
+
+                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" Height="Auto">
+                                    <Image Source="..\Images\icon_ruble.png" Style="{StaticResource IconStyle}"/>
+                                    <TextBlock Text="{Binding Path=Paid,Converter={StaticResource StringToDouble}}"/>
+                                </StackPanel>
+                                <Separator Background="{StaticResource DarkBlueStyle}"/>
+
+
+                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" Height="Auto">
+                                    <Image Source="..\Images\icon_creditcard.png" Style="{StaticResource IconStyle}"/>
+                                    <TextBlock Text="{Binding Path=IsCash,Converter={StaticResource BoolCashToString}}" />
+                                </StackPanel>
+                                <Separator Background="{StaticResource DarkBlueStyle}"/>
+
+                                <StackPanel Orientation="Horizontal"  VerticalAlignment="Center" Height="Auto">
+                                    <Image Source="..\Images\icon_calendar.png" Style="{StaticResource IconStyle}"/>
+                                    <TextBlock Text="{Binding Path=Date, StringFormat='{}{0:HH:mm (dd MMMM yyyy)}', ConverterCulture='ru-RU'}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                    </Border>
+                </ToolTip>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

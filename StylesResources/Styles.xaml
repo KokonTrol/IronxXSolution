@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Library">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Styles\StyleButtons.xaml" />
+        <ResourceDictionary Source="Styles\StyleDataGrid.xaml" />
+        <ResourceDictionary Source="Styles\StyleCheckBox.xaml" />
+        <ResourceDictionary Source="Styles\StyleSlider.xaml" />
+        <ResourceDictionary Source="Styles\StyleTextBox.xaml" />
+        <ResourceDictionary Source="Styles\StyleBaseToolTip.xaml" />
+        <ResourceDictionary Source="Styles\StyleSimpleListBox.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
