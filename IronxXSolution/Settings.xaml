@@ -5,38 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IronxXSolution"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800">
-    <Grid>
-        <Grid.Resources>
-            <Style TargetType="TabItem">
-                <Setter Property="Header" Value="{Binding Path=Title}" />
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate>
-                            <Grid
-                                VerticalAlignment="Center" 
-                                HorizontalAlignment="Left"
-                                MinHeight="50" Width="150"
-                                x:Name="PanelTabItem">
-                                <TextBlock Margin="10" TextWrapping="Wrap">
-                                        <ContentPresenter 
-                                    Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem} }, Path=Header}"/>
-                                </TextBlock>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="FontWeight" Value="Bold" />
-                        <Setter Property="Background" Value="{StaticResource DarkBlueStyle}" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Grid.Resources>
+        Title="Settings" MinHeight="500" Height="650" Width="800">
+    <Grid Background="{StaticResource DarkBlueStyle}">
 
-        <TabControl Name="verticalTabControl" TabStripPlacement="Left" Background="Transparent">
+        <TabControl Name="verticalTabControl" TabStripPlacement="Left">
             <TabItem Header="Администраторы" >
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
                               VerticalScrollBarVisibility="Auto">
@@ -50,11 +22,25 @@
                     <Frame Source="Pages\AddProductType.xaml"/>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Смены">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
-                              VerticalScrollBarVisibility="Auto">
-                    <Frame Source="Pages\ShiftConfig.xaml"/>
-                </ScrollViewer>
+            <TabItem Header="Другое">
+                <Grid Margin="10">
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Смены" Margin="20 0 0 0"
+                               FontSize="{StaticResource TitleFontSize}"
+                               Foreground="White"/>
+                    <Frame Grid.Row="1" Source="Pages\ShiftConfig.xaml"/>
+
+                    <TextBlock Grid.Row="2" Text="ПК, Игры, Лаунчеры"  Margin="20 0 0 0"
+                               FontSize="{StaticResource TitleFontSize}"
+                               Foreground="White"/>
+                    <Frame Grid.Row="3" Source="Pages\PCandGamesEdit.xaml"/>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

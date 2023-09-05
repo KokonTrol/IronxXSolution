@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IronxXSolution"
         mc:Ignorable="d"
         Title="Учет оплаты клуба" MinHeight="250" MinWidth="500"
-        Height="250" Width="500"
+        Height="250" Width="700"
         WindowStartupLocation="CenterScreen">
     <Grid Background="{StaticResource LightBlueStyle}">
         <Grid.RowDefinitions>

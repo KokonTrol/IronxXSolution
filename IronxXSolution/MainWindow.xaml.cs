@@ -67,7 +67,7 @@ namespace IronxXSolution
             }
         }
 
-        private async void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        private async void  MenuItem_Click_2(object sender, RoutedEventArgs e)
         {
             SettingExcel wind = new SettingExcel();
             wind.Owner = this;

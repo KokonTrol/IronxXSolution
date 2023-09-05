@@ -1,0 +1,129 @@
+﻿<Page x:Class="IronxXSolution.Pages.PCandGamesEdit"
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Width="Auto"
+      Height="Auto"
+      Title="PCandGamesEdit">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <TabControl x:Name="Tabs" Grid.Row="0" BorderBrush="Transparent"
+                    BorderThickness="0">
+            <TabItem Tag="pc" BorderBrush="Transparent" BorderThickness="0" Header="Компьютеры">
+                <TabItem.Content>
+
+                    <DataGrid x:Name="listPC" 
+                              ItemsSource="{Binding PC,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             HorizontalAlignment="Center"
+                             AutoGenerateColumns="False" 
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              ColumnHeaderHeight="35"
+                              CanUserAddRows="False"
+                              SelectionMode="Single"
+                              Background="Transparent"
+                              BorderThickness="0">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Имя" Width="*"
+                             Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <DataGridTemplateColumn Header="Цвет" Width="*" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <xctk:ColorPicker x:Name="colorPicker"
+                                                              SelectedColor="{Binding Path=Color,
+                                    Converter={StaticResource StringToColorConverter},
+                                                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         DisplayColorAndName="True" UsingAlphaChannel="True" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </TabItem.Content>
+            </TabItem>
+
+
+            <TabItem Tag="games" BorderBrush="Transparent" BorderThickness="0" Header="Игры">
+
+                <TabItem.Content >
+                    <ListBox x:Name="listGames" Grid.Row="0"  Background="Transparent" BorderThickness="0"
+                             ItemsSource="{Binding Games}" Style="{StaticResource ResourceKey=listBoxSimple}"/>
+                </TabItem.Content>
+
+            </TabItem>
+
+            <TabItem Tag="launchers" BorderBrush="Transparent" BorderThickness="0" Header="Лаунчеры">
+
+                <TabItem.Content>
+                    <DataGrid x:Name="listLaunchers"  Background="Transparent" BorderThickness="0"
+                              ItemsSource="{Binding Launchers,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 HorizontalAlignment="Center"
+                 AutoGenerateColumns="False" 
+                  HorizontalContentAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  ColumnHeaderHeight="35"
+                  CanUserAddRows="False"
+                              SelectionMode="Single">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Лаунчер" Width="*" 
+                             Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Логин"  Width="*" 
+                             Binding="{Binding Path=Login,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Пароль"  Width="*" 
+                             Binding="{Binding Path=Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+                </TabItem.Content>
+
+            </TabItem>
+        </TabControl>
+
+
+        <Border Grid.Row="1" BorderThickness="0, 3, 0, 0" BorderBrush="Black">
+            <Grid VerticalAlignment="Center" >
+                <StackPanel Orientation="Horizontal">
+                    <Button 
+                    Command="{Binding AddItemCommand}" CommandParameter="{Binding ElementName=Tabs, Path=SelectedItem}">
+                        <TextBlock Style="{StaticResource ResourceKey=ButtonText}" Text="Добавить"/>
+                    </Button>
+
+                    <Button Command="{Binding DeleteItemCommand}" Cursor="Hand">
+                        <TextBlock Style="{StaticResource ResourceKey=ButtonText}" Text="Удалить"/>
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiValues}">
+                                <Binding ElementName="Tabs" Path="SelectedItem"/>
+                                <Binding ElementName="listPC" Path="SelectedItem"/>
+                                <Binding ElementName="listGames" Path="SelectedItem"/>
+                                <Binding ElementName="listLaunchers" Path="SelectedItem"/>
+
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                </StackPanel>
+
+                <Button 
+                    Command="{Binding SaveChangesCommand}" HorizontalAlignment="Right">
+                    <TextBlock Style="{StaticResource ResourceKey=ButtonText}" Text="Сохранить"/>
+                </Button>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

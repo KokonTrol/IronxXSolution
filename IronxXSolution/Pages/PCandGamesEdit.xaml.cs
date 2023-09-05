@@ -1,32 +1,32 @@
-﻿using GalaSoft.MvvmLight.Command;
-using Library.Models;
+﻿using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Library.Functions;
+using GalaSoft.MvvmLight.Command;
 
-namespace IronXGameUpdate.ViewModel
+namespace IronxXSolution.Pages
 {
-    #region управление окном редактирования данных
-    public class ViewModelEdit : INotifyPropertyChanged
+    public partial class PCandGamesEdit : Page, INotifyPropertyChanged
     {
         public IronContext db;
 
         //родительское управление
-        ViewModelMain Parent;
-        public ViewModelEdit(ViewModelMain parent)
+        public PCandGamesEdit()
         {
+            db = new IronContext();
+            InitializeComponent();
+            DataContext = this;
             AddItemCommand = new RelayCommand<object>(obj => AddItem(obj));
             DeleteItemCommand = new RelayCommand<object>(obj => DeleteItem(obj));
-            db = new IronContext();
+            SaveChangesCommand = new RelayCommand(SaveChanges);
 
-            Parent = parent;
+            DataContext = this;
         }
 
         #region список пк
@@ -34,7 +34,6 @@ namespace IronXGameUpdate.ViewModel
         {
             get
             {
-                //db = new IronContext();
                 db.Computers.Load();
                 return db.Computers.Local.OrderBy(c => c.Name).ToList();
             }
@@ -51,7 +50,6 @@ namespace IronXGameUpdate.ViewModel
         {
             get
             {
-                //db = new IronContext();
                 db.Games.Load();
                 return db.Games.Local.OrderBy(c => c.Name).ToList();
             }
@@ -68,7 +66,6 @@ namespace IronXGameUpdate.ViewModel
         {
             get
             {
-                //db = new IronContext();
                 db.LaunchersInfos.Load();
                 return db.LaunchersInfos.Local.OrderBy(c => c.Name).ToList();
             }
@@ -99,56 +96,54 @@ namespace IronXGameUpdate.ViewModel
                 }
                 else
                 {
-                    var askName = new AskNewElement();
-                    if (askName.ShowDialog() == true)
+                    if (tab.Tag.ToString() == "pc")
                     {
-                        if (tab.Tag.ToString() == "pc" && db.Computers.Where(c => c.Name == askName.newName).Count() == 0)
+                        var newPC = new Computer();
+                        newPC.Name = newPC.Name + db.Computers.Count().ToString();
+                        db.Computers.Add(newPC);
+                        db.SaveChanges();
+
+                        foreach (var game in Games)
                         {
-                            var newPC = new Computer { Name = askName.newName };
-                            db.Computers.Add(newPC);
-                            db.SaveChanges();
-
-                            foreach (var game in Games)
+                            db.Updates.Add(new ComputerGame
                             {
-                                db.Updates.Add(new ComputerGame
-                                {
-                                    PcID = (db.Computers.Where(n => n.Name == newPC.Name).First().Id),
-                                    Computer = null,
-                                    GameID = game.Id,
-                                    Game = null,
-                                    Date = DateTime.FromBinary(1),
-                                    LastDate = DateTime.FromBinary(1)
-                                });
-                                db.SaveChanges();
-                            }
-                            log = $"Добавление нового ПК в базу. ПК: {newPC.Name}.\nАдмин: {Parent._admin.Name}";
-
-                        }
-                        else if (tab.Tag.ToString() == "games" && db.Games.Where(c => c.Name == askName.newName).Count() == 0)
-                        {
-                            var newGame = new Game { Name = askName.newName };
-                            db.Games.Add(newGame);
+                                PcID = (db.Computers.Where(n => n.Name == newPC.Name).First().Id),
+                                Computer = null,
+                                GameID = game.Id,
+                                Game = null,
+                                Date = DateTime.FromBinary(1),
+                                LastDate = DateTime.FromBinary(1)
+                            });
                             db.SaveChanges();
-
-                            foreach (var pc in PC)
-                            {
-                                db = new IronContext();
-                                db.Updates.Add(new ComputerGame
-                                {
-                                    PcID = pc.Id,
-                                    Computer = null,
-                                    GameID = (db.Games.Where(n => n.Name == newGame.Name).First().Id),
-                                    Game = null,
-                                    Date = DateTime.FromBinary(1),
-                                    LastDate = DateTime.FromBinary(1)
-                                });
-                                db.SaveChanges();
-                            }
-
-                            log = $"Добавление новой игры в базу. Игра: {newGame.Name}.\nАдмин: {Parent._admin.Name}";
                         }
+                        log = $"Добавление нового ПК в базу. ПК: {newPC.Name}.";
+
                     }
-                    Parent.NewLogLine(log);
+                    else if (tab.Tag.ToString() == "games")
+                    {
+                        var newGame = new Game();
+                        newGame.Name = newGame.Name + db.Games.Count().ToString();
+                        db.Games.Add(newGame);
+                        db.SaveChanges();
+
+                        foreach (var pc in PC)
+                        {
+                            db = new IronContext();
+                            db.Updates.Add(new ComputerGame
+                            {
+                                PcID = pc.Id,
+                                Computer = null,
+                                GameID = (db.Games.Where(n => n.Name == newGame.Name).First().Id),
+                                Game = null,
+                                Date = DateTime.FromBinary(1),
+                                LastDate = DateTime.FromBinary(1)
+                            });
+                            db.SaveChanges();
+                        }
+
+                        log = $"Добавление новой игры в базу. Игра: {newGame.Name}.";
+                    }
+                    BaseFunctions.NewLogLine(log, 0);
                     OnPropertyChanged("Games");
                     OnPropertyChanged("PC");
                 }
@@ -173,7 +168,7 @@ namespace IronXGameUpdate.ViewModel
                     db.Computers.Remove(pc);
                     db.SaveChanges();
 
-                    log = $"Удаление ПК из базы.\nID: {pc.Id}; ПК: {pc.Name}.\nАдмин: {Parent._admin.Name}";
+                    log = $"Удаление ПК из базы.\nID: {pc.Id}; ПК: {pc.Name}.";
 
                 }
                 else if (((TabItem)parameters[0]).Tag.ToString() == "games" && parameters[2] != null)
@@ -182,7 +177,7 @@ namespace IronXGameUpdate.ViewModel
                     db.Games.Remove(game);
                     db.SaveChanges();
 
-                    log = $"Удаление игры из базы.\nID: {game.Id}; ПК: {game.Name}.\nАдмин: {Parent._admin.Name}";
+                    log = $"Удаление игры из базы.\nID: {game.Id}; ПК: {game.Name}.";
                 }
                 else if (((TabItem)parameters[0]).Tag.ToString() == "launchers" && parameters[3] != null)
                 {
@@ -192,7 +187,7 @@ namespace IronXGameUpdate.ViewModel
 
                     log = $"Удаление информации о лаунчере из базы.\nID: {launcher.Id}; Лаунчер: {launcher.Name}.";
                 }
-                Parent.NewLogLine(log);
+                BaseFunctions.NewLogLine(log, 0);
                 OnPropertyChanged("Games");
                 OnPropertyChanged("PC");
                 OnPropertyChanged("Launchers");
@@ -201,7 +196,8 @@ namespace IronXGameUpdate.ViewModel
         }
         #endregion
 
-        public void OnWindowClosing(object sender, CancelEventArgs e)
+        public ICommand SaveChangesCommand { get; set; }
+        private void SaveChanges()
         {
             db.SaveChanges();
         }
@@ -216,5 +212,4 @@ namespace IronXGameUpdate.ViewModel
         }
         #endregion
     }
-    #endregion
 }

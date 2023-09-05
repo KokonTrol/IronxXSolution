@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace IronxXSolution
+namespace IronxXSolution.Pages
 {
     public partial class AddProductType : Page
     {

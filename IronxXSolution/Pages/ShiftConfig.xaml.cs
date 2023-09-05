@@ -1,9 +1,8 @@
 ﻿using Library.Models;
 using System.Windows;
-using Library.Functions;
 using System.Windows.Controls;
 
-namespace IronxXSolution
+namespace IronxXSolution.Pages
 {
     public partial class ShiftConfig : Page
     {
