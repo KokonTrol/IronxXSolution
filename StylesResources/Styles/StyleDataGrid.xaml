@@ -120,11 +120,11 @@
                 <Setter Property="FontWeight"
                         Value="Bold" />
             </Trigger>
-            <Trigger Property="IsSelected"
+            <!--<Trigger Property="IsSelected"
                         Value="False">
                 <Setter Property="Background"
                         Value="{DynamicResource LightBlueStyle}" />
-            </Trigger>
+            </Trigger>-->
         </Style.Triggers>
     </Style>
 

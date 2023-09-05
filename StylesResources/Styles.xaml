@@ -10,5 +10,7 @@
         <ResourceDictionary Source="Styles\StyleTextBox.xaml" />
         <ResourceDictionary Source="Styles\StyleBaseToolTip.xaml" />
         <ResourceDictionary Source="Styles\StyleSimpleListBox.xaml" />
+        <ResourceDictionary Source="Styles\StyleTabs.xaml" />
+
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

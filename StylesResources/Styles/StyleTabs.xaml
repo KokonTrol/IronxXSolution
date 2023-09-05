@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="StaticRes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="TabItem">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Header" Value="{Binding Path=Title}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Background="{StaticResource LightBlueStyle}"
+                                    CornerRadius="20" Padding="15 10" Margin="5"
+                                    Name="TabMenuBorder" Width="150">
+                        <Grid
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    x:Name="PanelTabItem">
+                            <TextBlock TextWrapping="Wrap" Foreground="White"
+                                       Name="TabMenuText" FontWeight="Normal">
+                                        <ContentPresenter 
+                                    Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem} }, Path=Header}"/>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="TabMenuBorder" Property="Background" Value="{StaticResource LightStyle}" />
+                            <Setter TargetName="TabMenuText" Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="TabControl">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style TargetType="{x:Type TabPanel}">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+</ResourceDictionary>
