@@ -1,5 +1,7 @@
 ﻿using Library.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -42,6 +44,29 @@ namespace IronxXSolution.Pages
                     break;
             }
 
+        }
+
+        private void ResetPassword(object sender, RoutedEventArgs e)
+        {
+            int id;
+            if (Int32.TryParse(((Button)sender).Tag.ToString(), out id))
+            {
+                MessageBoxResult result = MessageBox.Show(
+                    "Вы уверены, что хотите сбросить пароль?",
+                    "Сообщение",
+                    MessageBoxButton.YesNoCancel);
+                if (result == MessageBoxResult.Yes)
+                {
+                    if (_ironContext.Admin.Where(a => a.Id == id).Count() > 0)
+                    {
+                        _ironContext.Admin.Where(a => a.Id == id).First().Password = "";
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неверные данные", "Ошибка");
+                    }
+                }
+            }
         }
     }
 }
