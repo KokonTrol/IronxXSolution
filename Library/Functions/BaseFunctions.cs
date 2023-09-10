@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Reflection;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
 
 namespace Library.Functions
 {
@@ -115,9 +116,13 @@ namespace Library.Functions
                 Directory.CreateDirectory(documentPath);
         }
 
-        public static async Task CreateDBBackup()
+        #region новый лог
+        public static void NewLogLine(string line, int adminId)
         {
-
+            IronContext db = new IronContext();
+            db.Logs.Add(new Log { Text = line, AdminId = adminId });
+            db.SaveChanges();
         }
+        #endregion
     }
 }
