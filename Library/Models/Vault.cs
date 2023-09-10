@@ -6,18 +6,15 @@ using System.Runtime.CompilerServices;
 
 namespace Library.Models
 {
+    [Table("Vault")]
+
     public class Vault : INotifyPropertyChanged
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public double Value { get; set; }
+        public string Reason { get; set; } = "";
         public DateTime Date { get; set; } = DateTime.Now;
-
-
-        public override string ToString()
-        {
-            return $"{Date} {Value}";
-        }
 
         #region propertyChangrd
         public event PropertyChangedEventHandler PropertyChanged;

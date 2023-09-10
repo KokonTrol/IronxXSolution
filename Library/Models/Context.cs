@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Library.Models
 {
-    /* For Migrayions
-     EntityFrameworkCore\Add-Migration <migrationNamr>
+    /* For Migrations
+     EntityFrameworkCore\Add-Migration <migrationName>
+    Update-Database
      */
     public class IronContext : DbContext
     {
@@ -27,7 +28,7 @@ namespace Library.Models
         public IronContext()
         {
             //comment this for migrate
-            //this.Database.EnsureCreated();
+            this.Database.EnsureCreated();
             try
             {
                 this.Database.Migrate();
