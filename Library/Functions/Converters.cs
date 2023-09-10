@@ -121,6 +121,43 @@ namespace Library.Functions
         }
     }
 
+    //возврат названия товара относительно ID
+    [ValueConversion(typeof(int), typeof(string))]
+    public class ProductTypeFromID : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            var bd = new IronContext();
+            return bd.ProductType.Where(p => p.Id == System.Convert.ToInt32(value)).First().Name;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            var bd = new IronContext();
+            return bd.ProductType.Where(p => p.Name == value.ToString()).First().Id;
+        }
+    }
+
+    //возврат имени админа относительно ID
+    [ValueConversion(typeof(int), typeof(string))]
+    public class AdminNameFromID : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            var bd = new IronContext();
+            return bd.Admin.Where(p => p.Id == System.Convert.ToInt32(value)).First().Name;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            var bd = new IronContext();
+            return bd.Admin.Where(p => p.Name == value.ToString()).First().Id;
+        }
+    }
 
     public class MultiValues : IMultiValueConverter
     {
