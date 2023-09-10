@@ -114,7 +114,7 @@ namespace Library.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vault",
+                name: "Waste",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -125,7 +125,7 @@ namespace Library.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vault", x => x.Id);
+                    table.PrimaryKey("PK_Waste", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -254,7 +254,7 @@ namespace Library.Migrations
                 name: "Updates");
 
             migrationBuilder.DropTable(
-                name: "Vault");
+                name: "Waste");
 
             migrationBuilder.DropTable(
                 name: "Admin");

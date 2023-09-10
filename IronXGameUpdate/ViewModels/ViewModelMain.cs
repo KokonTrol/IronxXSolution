@@ -120,15 +120,6 @@ namespace IronXGameUpdate.ViewModel
             IsNewGameUpdates();
         }
 
-        #region новый лог
-        public void NewLogLine(string line)
-        {
-            //db = new IronContext();
-            db.Logs.Add(new Log { Text = line, AdminId = _admin.Id });
-            db.SaveChanges();
-        }
-        #endregion
-
         #region смена имени админа
         public ICommand ChangeAdminNameCommand { get; set; }
         private void ChangeAdminName()
@@ -137,7 +128,7 @@ namespace IronXGameUpdate.ViewModel
             if (askName.ShowDialog() == true)
             {
                 _admin.Name = askName.newName;
-                NewLogLine($"Админ {_admin.Name} вошел.");
+                //NewLogLine($"Админ {_admin.Name} вошел.");
             }
         }
         #endregion
@@ -150,27 +141,6 @@ namespace IronXGameUpdate.ViewModel
             view.ShowDialog();
         }
         #endregion
-
-
-        #region открыть окно пк и игр
-        public ICommand DataEditCommand { get; set; }
-        private void DataEdit()
-        {
-            if (_isAdmin)
-            {
-                EditPCandGames edit = new EditPCandGames(this);
-                edit.ShowDialog();
-                OnPropertyChanged("Games");
-                OnPropertyChanged("Updates");
-                OnPropertyChanged("Launchers");
-            }
-            else
-            {
-                MessageBox.Show("Отказано в доступе");
-            }
-        }
-        #endregion
-
 
 
         #region команда обновления таблицы обновления
@@ -210,8 +180,8 @@ namespace IronXGameUpdate.ViewModel
                         log = $"Убрано обозначение обновления.\n" + baseLog;
                     }
                     db.SaveChangesAsync();
-                    if (log != "")
-                        NewLogLine(log);
+                    //if (log != "")
+                    //    NewLogLine(log);
                     OnPropertyChanged("Updates");
                 }
                 catch { }

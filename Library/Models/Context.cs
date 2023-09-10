@@ -17,7 +17,7 @@ namespace Library.Models
         public DbSet<Admin> Admin { get; set; }
         public DbSet<ProductType> ProductType { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
-        public DbSet<Vault> Vault { get; set; }
+        public DbSet<Waste> Waste { get; set; }
         public DbSet<ComputerGame> Updates { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<CheckUpdate> CheckUpdates { get; set; }

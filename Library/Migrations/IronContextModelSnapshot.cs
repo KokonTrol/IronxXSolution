@@ -242,7 +242,7 @@ namespace Library.Migrations
                     b.ToTable("Transaction");
                 });
 
-            modelBuilder.Entity("Library.Models.Vault", b =>
+            modelBuilder.Entity("Library.Models.Waste", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -260,7 +260,7 @@ namespace Library.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vault");
+                    b.ToTable("Waste");
                 });
 
             modelBuilder.Entity("Library.Models.ComputerGame", b =>

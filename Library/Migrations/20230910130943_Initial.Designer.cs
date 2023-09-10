@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Migrations
 {
     [DbContext(typeof(IronContext))]
-    [Migration("20230910100048_Initial")]
+    [Migration("20230910130943_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -245,7 +245,7 @@ namespace Library.Migrations
                     b.ToTable("Transaction");
                 });
 
-            modelBuilder.Entity("Library.Models.Vault", b =>
+            modelBuilder.Entity("Library.Models.Waste", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -263,7 +263,7 @@ namespace Library.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vault");
+                    b.ToTable("Waste");
                 });
 
             modelBuilder.Entity("Library.Models.ComputerGame", b =>

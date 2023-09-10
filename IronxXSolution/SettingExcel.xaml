@@ -35,9 +35,10 @@
                             VerticalAlignment="Center"
                             IsTodayHighlighted="True"/>
             </StackPanel>
-            <CheckBox Content="Учитывать плату админов"
+            <CheckBox Content="Учитывать расходы"
                           x:Name="IsCashCheck"
-                      IsEnabled="False">
+                      IsEnabled="False"
+                      HorizontalAlignment="Center">
                 <CheckBox.Style>
                     <Style TargetType="CheckBox" BasedOn="{StaticResource customCheckboxStyle}"/>
                 </CheckBox.Style>

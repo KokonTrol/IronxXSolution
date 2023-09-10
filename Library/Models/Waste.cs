@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 
 namespace Library.Models
 {
-    [Table("Vault")]
+    [Table("Waste")]
 
-    public class Vault : INotifyPropertyChanged
+    public class Waste : INotifyPropertyChanged
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

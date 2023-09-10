@@ -20,7 +20,6 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0" FontSize="14">
-            <MenuItem Header="Данные" Command="{Binding DataEditCommand}"/>
             <MenuItem Header="Логи" Command="{Binding ShowLogsCommand}"/>
             <MenuItem Header="Смена админа" Command="{Binding ChangeAdminNameCommand}"
                       Margin="40 0 0 0"/>

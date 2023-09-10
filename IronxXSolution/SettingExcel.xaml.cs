@@ -4,24 +4,33 @@ using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Library.Functions;
+using System;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 
 namespace IronxXSolution
 {
     public partial class SettingExcel : Window
     {
-        public SettingExcel()
+        public SettingExcel(DateTime? minDate = null, DateTime? maxDate = null)
         {
             IronContext ironContext = new IronContext();
             ironContext.Transaction.Load();
-            var minDate = ironContext.Transaction.Min(t => t.Date);
-            var maxDate = ironContext.Transaction.Max(t => t.Date);
-
             InitializeComponent();
 
-            BeginDate.DisplayDateEnd = EndDate.DisplayDateEnd = ironContext.Transaction.Max(t => t.Date).Date;
-            BeginDate.DisplayDateStart = EndDate.DisplayDateStart = ironContext.Transaction.Min(t => t.Date).Date;
-            BeginDate.SelectedDate = EndDate.SelectedDate = EndDate.DisplayDateEnd;
+            if (minDate != null && maxDate != null)
+            {
+                BeginDate.SelectedDate = minDate;
+                EndDate.SelectedDate = maxDate;
+            }
+            else
+            {
+                //var min = ironContext.Transaction.Min(t => t.Date);
+                //var max = ironContext.Transaction.Max(t => t.Date);
 
+                BeginDate.DisplayDateEnd = EndDate.DisplayDateEnd = ironContext.Transaction.Max(t => t.Date).Date;
+                BeginDate.DisplayDateStart = EndDate.DisplayDateStart = ironContext.Transaction.Min(t => t.Date).Date;
+                BeginDate.SelectedDate = EndDate.SelectedDate = EndDate.DisplayDateEnd;
+            }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

@@ -1,0 +1,104 @@
+﻿<Window x:Class="IronxXSolution.TransactionsLogs"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IronxXSolution"
+        mc:Ignorable="d"
+        Title="Доходы/Расходы" MinHeight="450" MinWidth="800"
+        Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" 
+                    VerticalAlignment="Center" Margin="10">
+            <TextBlock Text="Начало" Margin="10 0 10 0"/>
+            <DatePicker Name="MinSelectedDate" 
+                    SelectedDateFormat="Short" 
+                        DisplayDateEnd="{Binding Path=SelectedDate, 
+                ElementName=MaxSelectedDate}"
+                        VerticalContentAlignment="Center"/>
+            <TextBlock Text="Конец" Margin="10 0 10 0"/>
+            <DatePicker Name="MaxSelectedDate" SelectedDateFormat="Short"
+                        VerticalContentAlignment="Center"
+                        SelectedDateChanged="EndDateCalendarChanged"
+                        />
+            <Button Content="Найти" Click="FindLogsByDateCommand"/>
+            <Button Content="Выгрузить" Click="OpenSettingExcel"
+                    HorizontalAlignment="Right"/>
+
+        </StackPanel>
+
+        <TabControl Grid.Row="1" >
+            <TabItem Header="Доходы" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="80"/>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid ItemsSource="{Binding Transactions, UpdateSourceTrigger=PropertyChanged}" 
+                          IsReadOnly="True"
+                          x:Name="TransactionsList"
+                          AutoGenerateColumns="False" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              Grid.Row="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Товар" Width="*"
+                             Binding="{Binding Path=ProductTypeId, 
+                                Converter={StaticResource ProductTypeFromID}}"/>
+                            <DataGridTextColumn Header="Имя" Width="*"
+                             Binding="{Binding Path=AdminId, 
+                                Converter={StaticResource AdminNameFromID}}"/>
+                            <DataGridTextColumn Binding="{Binding Path=Paid}" Header="Сумма" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding Path=Date, 
+                                StringFormat='dd.MM.yy    HH:mm'}" Header="Дата" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               x:Name="TransactionsSumm"
+                               FontSize="{StaticResource TitleFontSize}" 
+                               Foreground="Black"
+                               FontWeight="Bold"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Траты">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="80"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid ItemsSource="{Binding Wastes, UpdateSourceTrigger=PropertyChanged}" 
+                        IsReadOnly="True"
+                        x:Name="WasteList"
+                        AutoGenerateColumns="False" 
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            Grid.Row="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Имя" Width="*"
+                            Binding="{Binding Path=Reason}"/>
+                            <DataGridTextColumn Binding="{Binding Path=Value}" Header="Сумма" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding Path=Date, 
+                            StringFormat='dd.MM.yy    HH:mm'}" Header="Дата" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               x:Name="WastesSumm"
+                               FontSize="{StaticResource TitleFontSize}" 
+                               Foreground="Black"
+                               FontWeight="Bold"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
+    </Grid>
+</Window>

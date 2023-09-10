@@ -34,7 +34,8 @@
                         <DataTemplate>
                             <Button Tag="{Binding Path=Id}" 
                                     Click="ResetPassword"
-                                    Content="Сбросить"/>
+                                    Content="Сбросить"
+                                    Width="Auto"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
