@@ -53,7 +53,7 @@
                             <DataGridTextColumn Header="Имя" Width="*"
                              Binding="{Binding Path=AdminId, 
                                 Converter={StaticResource AdminNameFromID}}"/>
-                            <DataGridTextColumn Binding="{Binding Path=Paid}" Header="Сумма" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding Path=Paid, StringFormat=\{0\}р.}" Header="Сумма" Width="*"/>
                             <DataGridTextColumn Binding="{Binding Path=Date, 
                                 StringFormat='dd.MM.yy    HH:mm'}" Header="Дата" Width="*"/>
                         </DataGrid.Columns>
@@ -85,7 +85,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Имя" Width="*"
                             Binding="{Binding Path=Reason}"/>
-                            <DataGridTextColumn Binding="{Binding Path=Value}" Header="Сумма" Width="*"/>
+                            <DataGridTextColumn Binding="{Binding Path=Value, StringFormat=\{0\}р.}" Header="Сумма" Width="*"/>
                             <DataGridTextColumn Binding="{Binding Path=Date, 
                             StringFormat='dd.MM.yy    HH:mm'}" Header="Дата" Width="*"/>
                         </DataGrid.Columns>

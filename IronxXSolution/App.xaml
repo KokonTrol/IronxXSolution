@@ -11,7 +11,9 @@
             <shared:GameNameFromID x:Key="GameNameFromID"/>
             <shared:PCNameFromID x:Key="PCNameFromID"/>
             <shared:PCColorFromID x:Key="PCColorFromID"/>
-
+            <shared:ProductTypeFromID x:Key="ProductTypeFromID"/>
+            <shared:AdminNameFromID x:Key="AdminNameFromID"/>
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/StylesResources;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>

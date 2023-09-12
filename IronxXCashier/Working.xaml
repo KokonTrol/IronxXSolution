@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IronxXCashier"
-        xmlns:shared="clr-namespace:Library;assembly=StylesResources"
         mc:Ignorable="d"
         Title="Смена" Height="450" Width="800">
     <Grid>
@@ -64,7 +63,7 @@
                              Binding="{Binding Path=ProductTypeId,
                     Converter={StaticResource IdTypeToTypeName}}"/>
                 <DataGridTextColumn Header="Сумма" Width="*" 
-                             Binding="{Binding Path=Paid,
+                             Binding="{Binding Path=Paid, StringFormat=\{0\}р.,
                     Converter={StaticResource StringToDouble}}"/>
                 <DataGridTextColumn Header="Способ оплаты" Width="*" 
                              Binding="{Binding Path=IsCash,
