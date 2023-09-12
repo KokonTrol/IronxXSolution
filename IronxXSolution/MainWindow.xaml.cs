@@ -20,6 +20,7 @@ namespace IronxXSolution
             if (!_isAdmin)
             {
                 AdminsProperties.Visibility = Visibility.Collapsed;
+                AddingWastes.Visibility = Visibility.Collapsed;
             }
             ListSource();
         }
@@ -46,9 +47,6 @@ namespace IronxXSolution
                     chooseAdminList.SelectedItem = _admin;
                 }
             }
-
-
-            ExportExcelMenu.IsEnabled = _ironContext.Transaction.Local.Count != 0;
         }
 
         private void EnterButton_Click(object sender, RoutedEventArgs e)
@@ -65,14 +63,6 @@ namespace IronxXSolution
 
                 //ListSource();
             }
-        }
-
-        private async void  MenuItem_Click_2(object sender, RoutedEventArgs e)
-        {
-            SettingExcel wind = new SettingExcel();
-            wind.Owner = this;
-            wind.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            wind.ShowDialog();
         }
 
         private void CashierAppName_Click(object sender, RoutedEventArgs e)
@@ -100,6 +90,18 @@ namespace IronxXSolution
             Settings settings = new Settings();
             settings.ShowDialog();
             ListSource();
+        }
+
+        private void OpenTransactions(object sender, RoutedEventArgs e)
+        {
+            TransactionsLogs transactionsLogs = new TransactionsLogs();
+            transactionsLogs.ShowDialog();
+        }
+
+        private void OpenAddingWastes(object sender, RoutedEventArgs e)
+        {
+            AddNewWaste addNewWaste = new AddNewWaste();
+            addNewWaste.ShowDialog();
         }
     }
 }

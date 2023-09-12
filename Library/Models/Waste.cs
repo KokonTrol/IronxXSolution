@@ -15,6 +15,11 @@ namespace Library.Models
         public double Value { get; set; }
         public string Reason { get; set; } = "";
         public DateTime Date { get; set; } = DateTime.Now;
+        public Waste(double value, string reason)
+        {
+            Value = value;
+            Reason = reason;
+        }
 
         #region propertyChangrd
         public event PropertyChangedEventHandler PropertyChanged;

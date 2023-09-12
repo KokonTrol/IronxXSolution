@@ -20,8 +20,10 @@
                FontWeight="Bold">
             <MenuItem Header="Настройки" x:Name="AdminsProperties"
                       VerticalAlignment="Center" Cursor=""  Click="OpenSettings"/>
-
-            <MenuItem x:Name="ExportExcelMenu" Header="Выгрузить" Click="MenuItem_Click_2"/>
+            <MenuItem Header="Денежные операции" x:Name="TransactionsView"
+                      VerticalAlignment="Center" Cursor=""  Click="OpenTransactions"/>
+            <MenuItem Header="Добавить траты" x:Name="AddingWastes"
+                      VerticalAlignment="Center" Cursor=""  Click="OpenAddingWastes"/>
         </Menu>
 
         <StackPanel Grid.Row="1"
