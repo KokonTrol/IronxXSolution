@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Migrations
 {
     [DbContext(typeof(IronContext))]
-    [Migration("20230914103421_AddHelperInfoTable")]
-    partial class AddHelperInfoTable
+    [Migration("20230914130407_AddTitleKeysTypeHelperInfo")]
+    partial class AddTitleKeysTypeHelperInfo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,6 +159,22 @@ namespace Library.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("HelperInfoText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Keys")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

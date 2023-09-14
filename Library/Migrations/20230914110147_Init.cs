@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Library.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,7 +64,8 @@ namespace Library.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     SuperUserPassword = table.Column<string>(type: "TEXT", nullable: false),
                     NightWork = table.Column<int>(type: "INTEGER", nullable: false),
-                    DayWork = table.Column<int>(type: "INTEGER", nullable: false)
+                    DayWork = table.Column<int>(type: "INTEGER", nullable: false),
+                    HelperInfoVer = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,6 +83,19 @@ namespace Library.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HelperInfo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    HelperInfoText = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HelperInfo", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -240,6 +254,9 @@ namespace Library.Migrations
 
             migrationBuilder.DropTable(
                 name: "Config");
+
+            migrationBuilder.DropTable(
+                name: "HelperInfo");
 
             migrationBuilder.DropTable(
                 name: "LaunchersInfos");

@@ -116,6 +116,12 @@ namespace Library.Functions
                 Directory.CreateDirectory(documentPath);
         }
 
+        public static string GetHelperVer()
+        {
+            IronContext context = new IronContext();
+            return context.GetConfig().HelperInfoVer;
+        }
+
         #region новый лог
         public static void NewLogLine(string line, int adminId)
         {

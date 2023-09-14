@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Migrations
 {
     [DbContext(typeof(IronContext))]
-    [Migration("20230910130943_Initial")]
-    partial class Initial
+    [Migration("20230914110331_AddImageListAsStringToHelper")]
+    partial class AddImageListAsStringToHelper
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,6 +121,10 @@ namespace Library.Migrations
                     b.Property<int>("DayWork")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("HelperInfoVer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("NightWork")
                         .HasColumnType("INTEGER");
 
@@ -146,6 +150,25 @@ namespace Library.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("Library.Models.HelperInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("HelperInfoText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HelperInfo");
                 });
 
             modelBuilder.Entity("Library.Models.LaunchersInfo", b =>

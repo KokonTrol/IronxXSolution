@@ -31,14 +31,7 @@ namespace Library.Models
         {
             //comment this for migrate
             //this.Database.EnsureCreated();
-            try
-            {
-                this.Database.Migrate();
-            }
-            catch
-            {
-                //this.Database.EnsureCreated();
-            }
+            this.Database.Migrate();
             CheckOrCreateConfig();
         }
         protected readonly IConfiguration Configuration;
@@ -52,8 +45,7 @@ namespace Library.Models
             //comment this for migrate
             var data = JsonDocument.Parse(BaseFunctions.GetStringFileFromResources("DBConfig.json"));
             BaseFunctions.CreateDocumentsFolder();
-            string documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\" +
-                            data.RootElement.GetProperty("DocumentsFolder").ToString();
+            string documentPath = BaseFunctions.GetDocumentFolder();
             optionsBuilder.UseSqlite(@$"Data Source={documentPath + "\\" + data.RootElement.GetProperty("DBName")}");
 
             //uncomment this for migrate

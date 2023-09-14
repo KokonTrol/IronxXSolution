@@ -9,10 +9,14 @@ namespace Library.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string Title { get; set; } = "";
         public string HelperInfoText { get; set; } = "";
-        [NotMapped]
-        public byte[][] Images { get; set; } = null;
-        public HelperInfo(string helperInfoText, byte[][] images)
+        public string Images { get; set; } = "";
+        public string Keys { get; set; } = "";
+        public string Type { get; set; } = "";
+
+
+        public HelperInfo(string helperInfoText, string images)
         {
             HelperInfoText = helperInfoText;
             Images = images;
