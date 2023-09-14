@@ -110,7 +110,6 @@ namespace IronXGameUpdate.ViewModel
 
             ChangeUpdateCommand = new RelayCommand<object>(obj => UpdateGame(obj));
             ShowLogsCommand = new RelayCommand(ShowLogs);
-            DataEditCommand = new RelayCommand(DataEdit);
             ChangeAdminNameCommand = new RelayCommand(ChangeAdminName);
 
             MessageBox.Show("Пожалуйста, введите свой ник в следующем диалоговом окне");

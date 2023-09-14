@@ -16,7 +16,6 @@ namespace IronxXSolution.Pages
     {
         public IronContext db;
 
-        //родительское управление
         public PCandGamesEdit()
         {
             db = new IronContext();
