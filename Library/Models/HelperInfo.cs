@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Library.Models
@@ -22,6 +24,11 @@ namespace Library.Models
             Images = images;
         }
         public HelperInfo() { }
+
+        public List<string> GetImagesNames()
+        {
+            return Images.Split(';').ToList();
+        }
 
         #region propertyChangrd
         public event PropertyChangedEventHandler PropertyChanged;

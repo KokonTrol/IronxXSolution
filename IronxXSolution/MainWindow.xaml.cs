@@ -56,6 +56,8 @@ namespace IronxXSolution
             window._enteringAdmin = chooseAdminList.SelectedItem as Admin;
             if (window.ShowDialog() == true)
             {
+                _ironContext = new IronContext();
+                _ironContext.Admin.Load();
                 _admin = _ironContext.Admin.First(x => x.Id == window._enteringAdmin.Id);
 
                 OpenAppPanel.Visibility = Visibility.Visible;
@@ -102,6 +104,19 @@ namespace IronxXSolution
         {
             AddNewWaste addNewWaste = new AddNewWaste();
             addNewWaste.ShowDialog();
+        }
+
+        private void OpenHelper(object sender, RoutedEventArgs e)
+        {
+            var data = JsonDocument.Parse(BaseFunctions.GetStringFileFromResources("DBConfig.json"));
+            string tag = ((MenuItem)sender).Tag.ToString();
+            string file = data.RootElement.GetProperty(tag + "Name").ToString();
+
+            if (System.IO.File.Exists(file))
+            {
+                System.Diagnostics.Process.Start(file);
+            }
+            else MessageBox.Show(data.RootElement.GetProperty(tag + "Error").ToString());
         }
     }
 }

@@ -24,8 +24,9 @@ namespace Library.Models
         public DbSet<LaunchersInfo> LaunchersInfos { get; set; }
         public DbSet<Computer> Computers { get; set; }
         public DbSet<Log> Logs { get; set; }
+        public DbSet<HelperInfo> HelperInfo { get; set; }
+
         private DbSet<Config> Config { get; set; }
-        private DbSet<HelperInfo> HelperInfo { get; set; }
 
         public IronContext()
         {

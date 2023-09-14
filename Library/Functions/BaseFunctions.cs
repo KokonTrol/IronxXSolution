@@ -122,6 +122,13 @@ namespace Library.Functions
             return context.GetConfig().HelperInfoVer;
         }
 
+        public static void SetHelperVer(string newHelperVer)
+        {
+            IronContext context = new IronContext();
+            context.GetConfig().HelperInfoVer = newHelperVer;
+            context.SaveChanges();
+        }
+
         #region новый лог
         public static void NewLogLine(string line, int adminId)
         {

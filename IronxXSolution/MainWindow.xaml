@@ -24,6 +24,10 @@
                       VerticalAlignment="Center" Cursor=""  Click="OpenTransactions"/>
             <MenuItem Header="Добавить траты" x:Name="AddingWastes"
                       VerticalAlignment="Center" Cursor=""  Click="OpenAddingWastes"/>
+
+            <MenuItem Header="Открыть помощника" x:Name="Helper"
+                      Margin="40 0 0 0" Tag="HelperApp"
+                      VerticalAlignment="Center" Cursor=""  Click="OpenHelper"/>
         </Menu>
 
         <StackPanel Grid.Row="1"
