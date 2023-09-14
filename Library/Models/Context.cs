@@ -25,17 +25,19 @@ namespace Library.Models
         public DbSet<Computer> Computers { get; set; }
         public DbSet<Log> Logs { get; set; }
         private DbSet<Config> Config { get; set; }
+        private DbSet<HelperInfo> HelperInfo { get; set; }
+
         public IronContext()
         {
             //comment this for migrate
-            this.Database.EnsureCreated();
+            //this.Database.EnsureCreated();
             try
             {
                 this.Database.Migrate();
             }
             catch
             {
-                this.Database.EnsureCreated();
+                //this.Database.EnsureCreated();
             }
             CheckOrCreateConfig();
         }
