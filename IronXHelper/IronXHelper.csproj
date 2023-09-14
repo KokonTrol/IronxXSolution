@@ -5,11 +5,24 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <BaseOutputPath>..\bin</BaseOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="privateKey" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Library\Library.csproj" />
     <ProjectReference Include="..\StylesResources\StylesResources.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="privateKey" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YandexDisk.Client" Version="1.3.27" />
   </ItemGroup>
 
 </Project>
