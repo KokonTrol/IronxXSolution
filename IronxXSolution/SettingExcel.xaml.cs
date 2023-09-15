@@ -6,6 +6,9 @@ using System.Linq;
 using Library.Functions;
 using System;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using System.IO;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
+using System.Diagnostics;
 
 namespace IronxXSolution
 {
@@ -39,13 +42,22 @@ namespace IronxXSolution
             {
                 SaveFileDialog fileDialog = new SaveFileDialog()
                 {
-                    Filter = "Файл Excel (*.xlsx)|*.xlsx"
+                    Filter = "Файл Excel (*.xlsx)|*.xlsx",
+                    CheckFileExists = false,
+                    AddExtension = true
                 };
                 if (fileDialog.ShowDialog() == true)
                 {
+                    if (File.Exists(fileDialog.FileName))
+                    {
+                        MessageBox.Show("Файл с таким именем уже существует, попробуйте другое имя или измените итоговую папку.", "Файл существует", 
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
                     bool result = await ExportExcel.Export(path: fileDialog.FileName,
                                         beginDate: BeginDate.SelectedDate.Value,
-                                        endDate: EndDate.SelectedDate.Value);
+                                        endDate: EndDate.SelectedDate.Value,
+                                        useWastes: (bool)IsWastesCheck.IsChecked);
                     if (result)
                     {
                         MessageBox.Show(

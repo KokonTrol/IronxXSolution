@@ -7,21 +7,18 @@ using System.Data;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml.Style;
-using System.Globalization;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
-using System.Threading;
 using System.Windows;
+using OfficeOpenXml.Table;
 
 namespace Library.Functions
 {
     public static class ExportExcel
     {
 
-        public static async Task<bool> Export(string path, DateTime beginDate, DateTime endDate)
+        public static async Task<bool> Export(string path, DateTime beginDate, DateTime endDate, bool useWastes = false)
         {
             IronContext db = new IronContext();
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
             Config config = db.GetConfig();
             beginDate.AddHours(config.DayWork);
@@ -30,38 +27,63 @@ namespace Library.Functions
             db.Transaction.Load();
             db.Admin.Load();
             db.ProductType.Load();
+            db.Waste.Load();
 
             var package = new ExcelPackage();
-            var sheet = package.Workbook.Worksheets.Add("Сводка");
-            var fullInfo = package.Workbook.Worksheets.Add("Полная информация");
-            var tableInfo = package.Workbook.Worksheets.Add("Все транзакции");
+            var mainInfo = package.Workbook.Worksheets.Add("Сводка");
+            var transactionsShift = package.Workbook.Worksheets.Add("Полная информация");
+            var allTransactions = package.Workbook.Worksheets.Add("Все транзакции");
+            var allWastes = package.Workbook.Worksheets.Add("Все расходы");
 
 
 
-            Task[] tasks = new Task[3]
+
+            Task[] tasks = new Task[4]
                 {
-                    new Task(() => FillMainInfo(beginDate,
-                                                    endDate,
-                                                    config,
-                                                    ref sheet,
-                                                    db)),
-                    new Task(() => FillTransactionsShift(beginDate,
-                                                    endDate,
-                                                    config,
-                                                    ref fullInfo,
-                                                    db)),
-                    new Task(() => FillAllTransactions(beginDate,
-                                                    endDate,
-                                                    config,
-                                                    ref tableInfo,
-                                                    db))
+                    new Task(() => {
+                        try
+                        {
+                            mainInfo = FillMainInfo(beginDate, endDate, config, mainInfo, db, useWastes); 
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show($"Ошибка сохранения на страницу \"Сводка\".\n{ex.Message}");
+                        }
+                    }),
+                    new Task(() => {
+                        try
+                        {
+                            transactionsShift = FillTransactionsShift(beginDate, endDate, config, transactionsShift, db);}
+                        catch (Exception ex) {
+                            MessageBox.Show($"Ошибка сохранения на страницу \"Полная информация\".\n{ex.Message}");
+                        }
+                    }),
+                    new Task(() => {
+                        try
+                        {
+                            allTransactions = FillAllTransactions(beginDate, endDate, config, allTransactions, db);
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show($"Ошибка сохранения на страницу \"Все транзакции\".\n{ex.Message}");
+                        }
+                    }),
+                    new Task(() => {
+                        try
+                        {
+                            if (useWastes)
+                            { allWastes = FillAllWastes(beginDate, endDate, config, allWastes); }
+                            else{package.Workbook.Worksheets.Delete(allWastes); }
+                        }
+                        catch (Exception ex) {
+                            MessageBox.Show($"Ошибка сохранения на страницу \"Все расходы\".\n{ex.Message}");
+                        }
+                    })
                 };
             foreach (var t in tasks)
                 t.Start();
             Task.WaitAll(tasks);
             try
             {
-                File.WriteAllBytes(path, package.GetAsByteArray());
+                package.SaveAs(new FileInfo(@$"{path}"));
             }
             catch
             {
@@ -69,67 +91,62 @@ namespace Library.Functions
                     "Предупреждение",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
-                    return false;
+                return false;
             }
-            //MessageBox.Show("Экспорт данных завершен");
             return true;
         }
 
-        private static void FillTransactionsShift(DateTime beginDate, 
+        private static ExcelWorksheet FillTransactionsShift(DateTime beginDate, 
                                                     DateTime endDate, 
                                                     Config config,
-                                                    ref ExcelWorksheet fullInfo, 
+                                                    ExcelWorksheet fullInfo, 
                                                     IronContext db)
         {
-            //var fullInfo = package.Workbook.Worksheets.Add("Полная информация");
-            fullInfo.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            fullInfo.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            
-
             int row = 1;
             int column = 1;
             DateTime tempDate = beginDate;
 
+            //проход по каждому дню
             while (tempDate.Date != endDate.AddDays(1).Date)
             {
                 var trTemp = db.Transaction.Local.Where(t =>
                                             t.Date <= tempDate.AddDays(1) &&
                                             t.Date >= tempDate)
                                             .GroupBy(t => t.ProductTypeId);
+                //проверка на наличие транзакций
                 if (trTemp.Count() == 0)
                 {
+                    tempDate = tempDate.AddDays(1);
                     continue;
                 }
-                fullInfo.Cells[row, column].Value = tempDate.Date;
-                fullInfo.Cells[row, column].Style.Numberformat.Format = DateTimeFormatInfo.CurrentInfo.LongDatePattern;
-                fullInfo.Cells[row, column, row, column + 3].Merge = true;
 
-                fullInfo.Cells.Style.WrapText = true;
+                //написание даты
+                fullInfo.Cells[row, column, row, column + 3].Merge = true;
+                fullInfo.Cells[row, column].Value = tempDate.Date.Date.ToString("dd.MM.yyyy");
                 row++;
 
-                
-
+                //печать данных о каждом товаре
                 foreach (var item in trTemp)
                 {
+                    //инфо о товаре
                     fullInfo.Cells[row, column, row, column + 3].Merge = true;
                     fullInfo.Cells[row, column].Value = db.ProductType.Local.Where(p => p.Id == item.Key).First().Name;
                     fullInfo.Cells[row, column].Style.Font.Bold = true;
-                    fullInfo.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     row++;
 
+                    //заголовки мини-таблиц
                     fullInfo.Cells[row, column + 1, row, column + 3].LoadFromArrays(new object[][] { new[]
                     {
                         "Наличка", "Безнал", "Админ"
                     } });
                     fullInfo.Cells[row, column + 1, row, column + 3].Style.Font.Bold = true;
-                    fullInfo.Cells[row, column + 1, row, column + 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     row++;
 
                     fullInfo.Cells[row, column].Value = "День";
                     fullInfo.Cells[row + 1, column].Value = "Ночь";
                     fullInfo.Cells[row, column, row + 1, column].Style.Font.Bold = true;
-                    fullInfo.Cells[row, column, row + 1, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
+                    //запись суммы дневных транзакций
                     var dayTrans = item.Where(i =>
                     i.Date < tempDate.AddHours(config.NightWork - config.DayWork)).ToList();
 
@@ -146,9 +163,9 @@ namespace Library.Functions
                                    .Select(x=>x.Name).ToArray())
                             } 
                     });
-
                     row++;
 
+                    //запись суммы ночных транзакций
                     var nightTrans = item.Where(i =>
                                                 i.Date >= tempDate.AddHours(config.NightWork - config.DayWork)).ToList();
                     fullInfo.Cells[row, column + 1, row, column + 3].LoadFromArrays(new object[][] { new[]
@@ -168,137 +185,200 @@ namespace Library.Functions
                 }
 
                 row++;
+                fullInfo.Cells[1, 1, fullInfo.Dimension.End.Row, fullInfo.Dimension.End.Column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                fullInfo.Cells[1, 1, fullInfo.Dimension.End.Row, fullInfo.Dimension.End.Column].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                fullInfo.Cells[1, 1, fullInfo.Dimension.End.Row, fullInfo.Dimension.End.Column].Style.WrapText = true;
 
                 tempDate = tempDate.AddDays(1);
             }
+            return fullInfo;
         }
-        private static void FillMainInfo(DateTime beginDate,
+        private static ExcelWorksheet FillMainInfo(DateTime beginDate,
                                                     DateTime endDate,
                                                     Config config,
-                                                    ref ExcelWorksheet sheet,
-                                                    IronContext db)
+                                                    ExcelWorksheet sheet,
+                                                    IronContext db,
+                                                    bool useWastes)
         {
 
             var TransactionOrderByProducts = db.Transaction.Local
                                             .Where(t => t.Date >= beginDate && t.Date < endDate.AddDays(1))
                                             .GroupBy(t => t.ProductTypeId);
-            //var sheet = package.Workbook.Worksheets.Add("Сводка");
-            sheet.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            sheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
             int row = 1;
             int column = 1;
 
-            sheet.Cells[row, column, row + 1, column + 2].Merge = true;
+            //заголовок
+            sheet.Cells[row, column, row, column + 1].Merge = true;
             sheet.Cells[row, column].Value = $"Даты данных для отчета: {beginDate.ToString("dd.MM.yyyy")} - {endDate.ToString("dd.MM.yyyy")}";
-            sheet.Cells.Style.WrapText = true;
-            row++;
-            row++;
-
-
-            sheet.Cells[row, column, row, column + 2].Merge = true;
-            sheet.Cells[row, column].Value = "Всего";
-            sheet.Cells[row, column].Style.Font.Bold = true;
-            sheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
+            sheet.Cells[row, column].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             row++;
 
-            sheet.Cells[row, column + 1, row, column + 2].LoadFromArrays(new object[][] { new[]
-                    {
-                        "Наличка", "Безнал"
-                    } });
-            sheet.Cells[row, column + 1, row, column + 2].Style.Font.Bold = true;
-            sheet.Cells[row, column + 1, row, column + 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            row++;
-
-            sheet.Cells[row, column + 1].Value = db.Transaction.Local
+            double totalTransSummCash = db.Transaction.Local
                                             .Where(t => t.Date >= beginDate && t.Date < endDate.AddDays(1) && t.IsCash == true).Sum(i => i.Paid);
-            sheet.Cells[row, column + 2].Value = db.Transaction.Local
+            double totalTransSummNonCash = db.Transaction.Local
                                             .Where(t => t.Date >= beginDate && t.Date < endDate.AddDays(1) && t.IsCash == false).Sum(i => i.Paid);
 
-            sheet.Cells[row - 1, column, row, column + 2].Style.Border.BorderAround(ExcelBorderStyle.Thick);
+            //табличка доходов
+            #region transactions
+            //начало доходов
+            sheet.Cells[row, column, row, column + 1].Merge = true;
+            sheet.Cells[row, column].Value = "Доходы";
+            sheet.Cells[row, column].Style.Font.Bold = true;
+            sheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            row++;
 
+            sheet.Cells[row, column, row, column + 1].LoadFromArrays(
+                        new object[][] { new[] { "Наличка", "Безнал" } });
+            sheet.Cells[row, column + 1, row, column + 1].Style.Font.Bold = true;
+            sheet.Cells[row, column + 1, row, column + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            row++;
+            //запись сумм
+            sheet.Cells[row, column].Value = totalTransSummCash;
+            sheet.Cells[row, column + 1].Value = totalTransSummNonCash;
+            //сумма
+            row++;
+            sheet.Cells[row, column, row, column + 1].Merge = true;
+            sheet.Cells[row, column].Value = totalTransSummNonCash + totalTransSummCash;
+
+
+            sheet.Cells[row - 2, column, row, column + 1].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            sheet.Cells[row - 2, column, row, column + 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            sheet.Cells[row - 2, column, row, column + 1].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            sheet.Cells[row - 2, column, row, column + 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
             row += 2;
+            #endregion
 
+            //информация о тратах
+            #region wastes
+            if (useWastes)
+            {
+                //начало трат
+                sheet.Cells[row, column, row, column + 2].Merge = true;
+                sheet.Cells[row, column].Value = "Расходы/Прибыль";
+                sheet.Cells[row, column].Style.Font.Bold = true;
+                row++;
+
+                sheet.Cells[row, column].Value = "Расходы";
+                sheet.Cells[row+1, column].Value = "Прибыль";
+                sheet.Cells[row, column, row + 1, column].Style.Font.Bold = true;
+                sheet.Cells[row, column, row + 1, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                //запись сумм
+                double totalWastes = db.Waste.Local
+                                            .Where(t => t.Date >= beginDate && t.Date < endDate.AddDays(1)).Sum(i => i.Value);
+                sheet.Cells[row, column+1].Value = totalWastes;
+                sheet.Cells[row+1, column + 1].Value = totalTransSummCash + totalTransSummNonCash - totalWastes;
+                row++;
+                sheet.Cells[row - 1, column, row, column + 1].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                sheet.Cells[row - 1, column, row, column + 1].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                sheet.Cells[row - 1, column, row, column + 1].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                sheet.Cells[row - 1, column, row, column + 1].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                row += 2;
+            }
+            #endregion
+
+            //заголовок
+            sheet.Cells[row, column, row, column + 3].Merge = true;
             sheet.Cells[row, column].Value = $"Информация по каждой группе товаров:";
-            sheet.Cells[row, column].Style.Font.Size = 20;
-            sheet.Cells[row, column].Style.WrapText = false;
-            sheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            sheet.Cells[row, column].Style.Font.Bold = true;
 
+            row++;
 
-            row += 2;
+            //создание таблицы о доходах по товарам
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Товар", typeof(string));
+            dataTable.Columns.Add("Наличка", typeof(string));
+            dataTable.Columns.Add("Безнал", typeof(string));
+            dataTable.Columns.Add("Итого", typeof(string));
 
             foreach (var item in TransactionOrderByProducts)
             {
-                sheet.Cells[row, column, row, column + 2].Merge = true;
-                sheet.Cells[row, column].Value = db.ProductType.Local.Where(p => p.Id == item.Key).First().Name;
-                sheet.Cells[row, column].Style.Font.Bold = true;
-                sheet.Cells[row, column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                row++;
-
-                sheet.Cells[row, column + 1, row, column + 2].LoadFromArrays(new object[][] { new[]
-                    {
-                        "Наличка", "Безнал"
-                    } });
-                sheet.Cells[row, column + 1, row, column + 2].Style.Font.Bold = true;
-                sheet.Cells[row, column + 1, row, column + 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                row++;
-
-                sheet.Cells[row, column + 1].Value = item.Where(i => i.IsCash == true).Sum(i => i.Paid);
-                sheet.Cells[row, column + 2].Value = item.Where(i => i.IsCash == false).Sum(i => i.Paid);
-
-                sheet.Cells[row - 1, column, row, column + 2].Style.Border.BorderAround(ExcelBorderStyle.Thick);
-                row += 2;
+                dataTable.Rows.Add(db.ProductType.Local.Where(p => p.Id == item.Key).First().Name,
+                    item.Where(i => i.IsCash == true).Sum(i => i.Paid),
+                    item.Where(i => i.IsCash == false).Sum(i => i.Paid),
+                    item.Sum(i => i.Paid));
             }
+            sheet.Cells[row, 1].LoadFromDataTable(dataTable, true);
+            ExcelRange range = sheet.Cells[row, 1, row + dataTable.Rows.Count, dataTable.Columns.Count];
+            ExcelTable tab = sheet.Tables.Add(range, "MainInfo");
+            tab.TableStyle = TableStyles.Medium3;
+
+            sheet.Cells[1, 1, sheet.Dimension.End.Row, sheet.Dimension.End.Column].AutoFitColumns();
+            sheet.Cells[1, 1, sheet.Dimension.End.Row, sheet.Dimension.End.Column].Style.WrapText = true;
+            sheet.Cells[1, 1, sheet.Dimension.End.Row, sheet.Dimension.End.Column].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+            return sheet;
         }
-
-        private static void FillAllTransactions(DateTime beginDate,
-                                                    DateTime endDate,
-                                                    Config config,
-                                                    ref ExcelWorksheet tableInfo,
-                                                    IronContext db)
+        private static ExcelWorksheet FillAllTransactions(DateTime beginDate,
+                                                            DateTime endDate,
+                                                            Config config,
+                                                            ExcelWorksheet tableInfo,
+                                                            IronContext db)
         {
-
             var AllTransactions = db.Transaction.Local
                                             .Where(t => t.Date >= beginDate && t.Date < endDate.AddDays(1));
-            //var sheet = package.Workbook.Worksheets.Add("Сводка");
-            tableInfo.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            tableInfo.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            int row = 1;
-            int column = 1;
+            //создание таблицы
+            DataTable dataTable = new DataTable();
+            //добавление заголовков
+            dataTable.Columns.Add("ДАТА", typeof(string));
+            dataTable.Columns.Add("ВРЕМЯ", typeof(string));
+            dataTable.Columns.Add("ПРОДАЖА", typeof(string));
+            dataTable.Columns.Add("СУММА", typeof(double));
+            dataTable.Columns.Add("ТИП ПЛАТЫ", typeof(string));
+            dataTable.Columns.Add("АДМИН", typeof(string));
 
-            //Заголовки
-            tableInfo.Cells[row, column, row, column + 4].LoadFromArrays(new object[][] { new[]
-                    {
-                       "ДАТА",
-                       "ПРОДАЖА",
-                       "СУММА",
-                       "ТИП ПЛАТЫ",
-                       "АДМИН"
-                    }
-            });
-            tableInfo.Cells[row, column, row, column + 4].Style.Font.Bold = true;
-
-            row ++;
-
+            //заполнение
             foreach (var item in AllTransactions)
             {
-
-                tableInfo.Cells[row, column, row, column + 4].LoadFromArrays(new object[][] { new[] {
-                       item.Date,
+                dataTable.Rows.Add(item.Date.Date.ToString("dd.MM.yyyy"),
+                       item.Date.ToString("HH:mm:ss"),
                        db.ProductType.Where(p => p.Id == item.ProductTypeId).First().Name,
                        item.Paid as object,
                        item.IsCash ? "Наличка" : "Безнал",
-                       db.Admin.Where(a => a.Id == item.AdminId).First().Name
-                    } }
-                );
-                tableInfo.Cells[row, column].Style.Numberformat.Format = DateTimeFormatInfo.CurrentInfo.LongDatePattern;
-
-                row++;
+                       db.Admin.Where(a => a.Id == item.AdminId).First().Name);
             }
+            tableInfo.Cells["A1"].LoadFromDataTable(dataTable, true);
+            ExcelRange range = tableInfo.Cells[1, 1, tableInfo.Dimension.End.Row, tableInfo.Dimension.End.Column];
+            ExcelTable tab = tableInfo.Tables.Add(range, "AllTransactions");
+            tab.TableStyle = TableStyles.Medium3;
+
+            tableInfo.Cells[1, 1, tableInfo.Dimension.End.Row, tableInfo.Dimension.End.Column].AutoFitColumns();
+            return tableInfo;
+        }
+
+        private static ExcelWorksheet FillAllWastes(DateTime beginDate,
+                                                            DateTime endDate,
+                                                            Config config,
+                                                            ExcelWorksheet wastesTable)
+        {
+            IronContext db = new IronContext();
+            db.Waste.Load();
+            var AllWastes = db.Waste.Local.Where(t => t.Date >= beginDate && t.Date < endDate.AddDays(1));
+
+            //создание таблицы
+            DataTable dataTable = new DataTable();
+            //добавление заголовков
+            dataTable.Columns.Add("ДАТА ДОБАВЛЕНИЯ", typeof(string));
+            dataTable.Columns.Add("ВРЕМЯ", typeof(string));
+            dataTable.Columns.Add("ПРИЧИНА", typeof(string));
+            dataTable.Columns.Add("СУММА", typeof(double));
+
+            //заполнение
+            foreach (var item in AllWastes)
+            {
+                dataTable.Rows.Add(item.Date.Date.ToString("dd.MM.yyyy"),
+                       item.Date.ToString("HH:mm:ss"),
+                       item.Reason,
+                       item.Value );
+            }
+            wastesTable.Cells["A1"].LoadFromDataTable(dataTable, true);
+            ExcelRange range = wastesTable.Cells[1, 1, wastesTable.Dimension.End.Row, wastesTable.Dimension.End.Column];
+            ExcelTable tab = wastesTable.Tables.Add(range, "AllTransactions");
+            tab.TableStyle = TableStyles.Medium3;
+
+            wastesTable.Cells[1, 1, wastesTable.Dimension.End.Row, wastesTable.Dimension.End.Column].AutoFitColumns();
+            return wastesTable;
         }
     }
 }

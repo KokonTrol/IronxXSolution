@@ -36,8 +36,7 @@
                             IsTodayHighlighted="True"/>
             </StackPanel>
             <CheckBox Content="Учитывать расходы"
-                          x:Name="IsCashCheck"
-                      IsEnabled="False"
+                          x:Name="IsWastesCheck"
                       HorizontalAlignment="Center">
                 <CheckBox.Style>
                     <Style TargetType="CheckBox" BasedOn="{StaticResource customCheckboxStyle}"/>
