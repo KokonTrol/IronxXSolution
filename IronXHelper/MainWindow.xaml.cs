@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,6 +48,7 @@ namespace IronXHelper
             Spinner.Visibility = Visibility.Visible;
             HelperInfoList = new List<HelperInfo>();
             OnPropertyChanged("HelperInfoList");
+            Thread.Sleep(10);
 
             await Task<bool>.Run(async () =>
                await Downloader.DownloadInfo()).ContinueWith(t =>
