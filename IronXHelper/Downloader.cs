@@ -69,7 +69,7 @@ namespace IronXHelper
                 Directory.CreateDirectory(folder);
             }
         }
-        private static async Task FillHelperDB()
+        private static async Task<bool> FillHelperDB()
         {
             List <HelperInfo> tempHelpers;
             using (FileStream fs = new FileStream(Path.Combine(tempHelperFolder, fileText), FileMode.Open))
@@ -115,9 +115,33 @@ namespace IronXHelper
             DeleteFolder(helperFolder);
             //CreateFolder(helperFolder);
             Directory.Move(tempHelperFolder, helperFolder);
+            return true;
         }
 
-        public static async Task DownloadInfo()
+        private static async Task<bool> GetFiles(DiskHttpApi api, string helperVer)
+        {
+            File.Delete(Path.Combine(tempHelperFolder, fileVer));
+            Resource resources = await api.MetaInfo.GetInfoAsync(new ResourceRequest
+            {
+                Path = path,
+            }, CancellationToken.None);
+
+            IEnumerable<Resource> allFiles =
+                resources.Embedded.Items.Where(item => item.Type == ResourceType.File);
+
+            IEnumerable<Task> downloadingTasks =
+                allFiles.Select(file =>
+                  api.Files.DownloadFileAsync(file.Path, localFile: Path.Combine(tempHelperFolder, file.Name)));
+
+            await Task.WhenAll(downloadingTasks);
+
+            BaseFunctions.SetHelperVer(helperVer);
+
+            return await FillHelperDB();
+        }
+
+
+        public static async Task<bool> DownloadInfo()
         {
             string key = GetKey();
 
@@ -132,35 +156,23 @@ namespace IronXHelper
 
                 string helperVer = File.ReadAllText(Path.Combine(tempHelperFolder, fileVer));
 
-                if (helperVer != BaseFunctions.GetHelperVer())
+                if (helperVer == BaseFunctions.GetHelperVer())
                 {
-                    File.Delete(Path.Combine(tempHelperFolder, fileVer));
-                    Resource resources = await api.MetaInfo.GetInfoAsync(new ResourceRequest
+                    MessageBoxResult dialogResult = MessageBox.Show("Обновление не требуется.\n\nВыполнить принудительное обновление файлов?", "Обновление", MessageBoxButton.YesNo);
+                    if (dialogResult == MessageBoxResult.Yes)
                     {
-                        Path = path,
-                    }, CancellationToken.None);
-
-                    IEnumerable<Resource> allFiles =
-                        resources.Embedded.Items.Where(item => item.Type == ResourceType.File);
-
-                    IEnumerable<Task> downloadingTasks =
-                        allFiles.Select(file =>
-                          api.Files.DownloadFileAsync(file.Path, localFile: Path.Combine(tempHelperFolder, file.Name)));
-
-                    await Task.WhenAll(downloadingTasks);
-
-                    BaseFunctions.SetHelperVer(helperVer);
-
-                    await FillHelperDB();
-                }
-                {
+                        return await GetFiles(api, helperVer);
+                    }
                     DeleteFolder(tempHelperFolder);
+                    return true;
                 }
+                return await GetFiles(api, helperVer);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Невозможно подключится к источнику.\n{ex.Message}\n{ex}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 DeleteFolder(tempHelperFolder);
+                return false;
             }
         }
     }
