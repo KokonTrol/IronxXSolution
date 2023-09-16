@@ -5,12 +5,24 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary >
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/StylesResources;component/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
-            
-            
+
+            <local:FileNameToPath x:Key="FileNameToPath"/>
+
+
+            <Style TargetType="ListBoxItem">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <ContentPresenter />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

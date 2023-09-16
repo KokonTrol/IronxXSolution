@@ -1,45 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Library.Functions;
+using System;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
 namespace IronXHelper
 {
-    //конвертация массива байт в изображение
-    [ValueConversion(typeof(byte[]), typeof(BitmapSource))]
-    public class ByteBitmap : IValueConverter
+    public class FileNameToPath : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            using (MemoryStream ms = new MemoryStream((byte[])value))
+            BitmapImage bitmapImage;
+            try
             {
-                BitmapDecoder bitmapDecoder = BitmapDecoder.Create(ms, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-                BitmapSource photo = new WriteableBitmap(bitmapDecoder.Frames.Single());
-                return photo;
+                Uri imageUri = new Uri(BaseFunctions.GetDocumentFolder() + "\\Helper\\" + (string)value, UriKind.RelativeOrAbsolute);
+                bitmapImage = new BitmapImage(imageUri);
             }
+            catch
+            {
+                bitmapImage = new BitmapImage(new Uri("/noimage.jpg", UriKind.Relative)) { CreateOptions = BitmapCreateOptions.IgnoreImageCache };
+            }
+            return bitmapImage;
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            //encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-            encoder.QualityLevel = 100;
-            // byte[] bit = new byte[0];
-            using (MemoryStream stream = new MemoryStream())
-            {
-                encoder.Frames.Add(BitmapFrame.Create((BitmapSource)value));
-                encoder.Save(stream);
-                byte[] bit = stream.ToArray();
-                stream.Close();
-                return bit;
-            }
+            return null;
         }
     }
-
 }

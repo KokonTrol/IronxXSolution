@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:local="clr-namespace:IronXHelper"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Помощник" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -21,11 +23,12 @@
                 <TextBox  Margin="10 10 0 10" FontSize="14"
                      HorizontalContentAlignment="Stretch"
                      Width="200" VerticalContentAlignment="Center"/>
-                <Button Content="Найти" Height="40"/>
+                <Button x:Name="FindHelpsButton" Content="Найти" Height="40"/>
             </StackPanel>
             
             <Button Content="Проверить обновление" Height="40" 
-                    Width="250" Grid.Column="1"/>
+                    Width="250" Grid.Column="1" x:Name="CheckUpdateButton"
+                    Click="CheckUpdateButton_Click"/>
         </Grid>
 
         <Grid Grid.Row="1" Background="{StaticResource DarkBlueStyle}">
@@ -34,15 +37,110 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <ListBox Grid.Column="0" Width="250"/>
+            <ListBox Grid.Column="0" Width="Auto"
+                     x:Name="HelperList"
+                     ItemsSource="{Binding HelperInfoList, 
+                    UpdateSourceTrigger=PropertyChanged}"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     SelectionMode="Single">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        
+                        <Border Background="{StaticResource LightStyle}"
+                                CornerRadius="16" Padding="15"
+                                x:Name="Border"
+                                Margin="5"
+                                Cursor="Hand">
+                            <StackPanel HorizontalAlignment="Left" Height="Auto"
+                                    Width="200" MaxWidth="200">
+                                <TextBlock FontSize="{StaticResource HeaderFontSize}"
+                                       FontWeight="Bold"
+                                       Text="{Binding Path=Title}"
+                                           Foreground="White"
+                                           x:Name="Title"/>
+                                <TextBlock FontSize="12"
+                                       Text="{Binding Path=Type}"/>
+                            </StackPanel>
+                        </Border>
+                        <DataTemplate.Triggers>
+                            <DataTrigger
+                                    Binding="{Binding
+                                        RelativeSource={RelativeSource
+                                            Mode=FindAncestor,
+                                            AncestorType={x:Type ListBoxItem}},
+                                            Path=IsSelected}"
+                                    Value="True">
+                                <Setter Property="Background" TargetName="Border"
+                                        Value="{StaticResource OrangeStyle}" />
+                                <Setter Property="FontSize" TargetName="Title"
+                                        Value="{StaticResource TitleFontSize}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
             <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                <Border CornerRadius="16" Margin="15"
+                        Background="{StaticResource LightBlueStyle}">
+                    <ScrollViewer DataContext="{Binding ElementName=HelperList, 
+                    Path=SelectedItem}"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="20">
+                            <TextBlock Text="{Binding Path=Title}"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Margin="0 0 0 15"/>
+                            <TextBlock Text="{Binding Path=HelperInfoText}"
+                                   FontSize="{StaticResource MainFontSize}"
+                                   HorizontalAlignment="Stretch"/>
+
+
+                            <ListBox ItemsSource="{Binding Path=ImagesList}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     AlternationCount="{Binding Path=ImagesList.Count}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    Orientation="Horizontal"
+                                                    Margin="5">
+                                            <TextBlock FontSize="{StaticResource HeaderFontSize}"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding RelativeSource={RelativeSource TemplatedParent}, 
+                                                    Path=TemplatedParent.(ItemsControl.AlternationIndex), StringFormat=\{0\}.}"
+                                                    Foreground="White"
+                                                    x:Name="Title"
+                                                    Margin="0 5 0 0"/>
+                                            <Image Source="{Binding ., Converter={StaticResource FileNameToPath}}"
+                                                   Width="100" Height="100" Stretch="UniformToFill" Cursor="Hand" MouseUp="Image_MouseUp" 
+                                                   />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+                
             </Grid>
+            <fa:ImageAwesome Grid.Column="1" Icon="Refresh" 
+                             Visibility="Collapsed"
+                             x:Name="Spinner"
+                             Height="48" 
+                             Width="48"
+                             SpinDuration="3"
+                             
+                             Foreground="White" Spin="True"/>
             
         </Grid>
 

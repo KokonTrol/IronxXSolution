@@ -1,13 +1,75 @@
-﻿using System.Windows;
+﻿using Library.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace IronXHelper
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        #region PropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+        #endregion
+
+
+        private IEnumerable<HelperInfo> GetHelperInfoList()
+        {
+            IronContext context = new IronContext();
+            context.HelperInfo.Load();
+            return context.HelperInfo.Local.OrderBy(x => x.Type).ToList();
+        }
+        public IEnumerable<HelperInfo> HelperInfoList { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            Downloader.DownloadInfo();
+            DataContext = this;
+            HelperInfoList = GetHelperInfoList();
+            if (HelperInfoList.Count() == 0)
+            {
+                UpdateHelper();
+            }
+        }
+
+        private async Task UpdateHelper()
+        {
+            CheckUpdateButton.IsEnabled = FindHelpsButton.IsEnabled = false;
+            Spinner.Visibility = Visibility.Visible;
+            HelperInfoList = new List<HelperInfo>();
+            OnPropertyChanged("HelperInfoList");
+
+            await Task<bool>.Run(async () =>
+               await Downloader.DownloadInfo()).ContinueWith(t =>
+            {
+                if (!t.Result)
+                {
+                    MessageBox.Show("Не удалось обновить информацию.");
+                }
+                Spinner.Visibility = Visibility.Collapsed;
+                CheckUpdateButton.IsEnabled = FindHelpsButton.IsEnabled = true;
+                HelperInfoList = GetHelperInfoList();
+                OnPropertyChanged("HelperInfoList");
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        private void CheckUpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateHelper();
+        }
+
+        private void Image_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            FullScreenImage fullScreenImage = new FullScreenImage(((Image)sender).Source);
+            fullScreenImage.ShowDialog();
         }
     }
 }

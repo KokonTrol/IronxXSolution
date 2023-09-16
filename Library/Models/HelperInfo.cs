@@ -16,7 +16,8 @@ namespace Library.Models
         public string Images { get; set; } = "";
         public string Keys { get; set; } = "";
         public string Type { get; set; } = "";
-
+        [NotMapped]
+        public List<string> ImagesList { get { return Images.Split(';').ToList(); }}
 
         public HelperInfo(string helperInfoText, string images)
         {
@@ -24,11 +25,6 @@ namespace Library.Models
             Images = images;
         }
         public HelperInfo() { }
-
-        public List<string> GetImagesNames()
-        {
-            return Images.Split(';').ToList();
-        }
 
         #region propertyChangrd
         public event PropertyChangedEventHandler PropertyChanged;
