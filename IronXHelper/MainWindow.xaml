@@ -58,7 +58,8 @@
                                        FontWeight="Bold"
                                        Text="{Binding Path=Title}"
                                            Foreground="White"
-                                           x:Name="Title"/>
+                                           x:Name="Title"
+                                           TextWrapping="Wrap"/>
                                 <TextBlock FontSize="12"
                                        Text="{Binding Path=Type}"/>
                             </StackPanel>
@@ -92,16 +93,20 @@
                             <TextBlock Text="{Binding Path=Title}"
                                    FontSize="24"
                                    FontWeight="Bold"
-                                   Margin="0 0 0 15"/>
+                                   Margin="0 0 0 15"
+                                   TextWrapping="Wrap"/>
                             <TextBlock Text="{Binding Path=HelperInfoText}"
                                    FontSize="{StaticResource MainFontSize}"
-                                   HorizontalAlignment="Stretch"/>
+                                   HorizontalAlignment="Stretch"
+                                   TextWrapping="Wrap"/>
 
 
                             <ListBox ItemsSource="{Binding Path=ImagesList}"
+                                     x:Name="ListBoxImagesList"
                                      Background="Transparent"
                                      BorderThickness="0"
-                                     AlternationCount="{Binding Path=ImagesList.Count}">
+                                     AlternationCount="{Binding Path=ImagesList.Count}"
+                                     Margin="0 10 0 0">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel Orientation="Horizontal"/>
@@ -111,15 +116,15 @@
                                     <DataTemplate>
                                         <StackPanel HorizontalAlignment="Left"
                                                     VerticalAlignment="Top"
-                                                    Orientation="Horizontal"
-                                                    Margin="5">
+                                                    Orientation="Horizontal">
                                             <TextBlock FontSize="{StaticResource HeaderFontSize}"
-                                                    FontWeight="Bold"
-                                                    Text="{Binding RelativeSource={RelativeSource TemplatedParent}, 
-                                                    Path=TemplatedParent.(ItemsControl.AlternationIndex), StringFormat=\{0\}.}"
-                                                    Foreground="White"
-                                                    x:Name="Title"
-                                                    Margin="0 5 0 0"/>
+                                                       Width="Auto"
+                                                       FontWeight="Bold"
+                                                       Text="{Binding RelativeSource={RelativeSource TemplatedParent}, 
+                                                       Path=TemplatedParent.(ItemsControl.AlternationIndex), StringFormat=\{0\}.}"
+                                                       Foreground="White"
+                                                       x:Name="Title"
+                                                       Margin="5 5 20 0"/>
                                             <Image Source="{Binding ., Converter={StaticResource FileNameToPath}}"
                                                    Width="100" Height="100" Stretch="UniformToFill" Cursor="Hand" MouseUp="Image_MouseUp" 
                                                    />
