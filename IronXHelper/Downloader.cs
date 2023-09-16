@@ -77,6 +77,7 @@ namespace IronXHelper
                 try
                 {
                     tempHelpers = await JsonSerializer.DeserializeAsync<List<HelperInfo>>(fs);
+                    tempHelpers.ForEach(x => x.HelperInfoText = x.HelperInfoText.Replace("\\n", "\n"));
                 }
                 catch (Exception ex)
                 {
