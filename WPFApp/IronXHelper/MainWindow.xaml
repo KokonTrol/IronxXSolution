@@ -91,7 +91,7 @@
             </ListBox>
 
             <Grid Grid.Column="1">
-                <Border CornerRadius="16" Margin="15"
+                <Border CornerRadius="16" Margin="15" Padding="10"
                         Background="{StaticResource LightBlueStyle}">
                     <ScrollViewer DataContext="{Binding ElementName=HelperList, 
                     Path=SelectedItem}"
@@ -132,11 +132,13 @@
                                 </ListView.ItemsPanel>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border CornerRadius="15" Padding="11 3"
+                                        <Border CornerRadius="10" Padding="11 3"
+                                                MinWidth="50"
                                                 Background="{StaticResource LightStyle}"
-                                                Margin="0 2 10 2">
+                                                Margin="0 2 7 2">
                                             <TextBlock Text="{Binding}"
                                                        VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
                                                        Foreground="White"
                                                        FontSize="{StaticResource MainFontSize}"/>
                                         </Border>

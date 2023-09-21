@@ -13,15 +13,15 @@ def main():
     try:
         DBpath = sys.argv[1].replace("-DBpath=", "")
         searchQuery = sys.argv[2].replace("-query=", "")
-        print(f"DBpath = {DBpath}\nSearch query = {searchQuery}")
+        #print(f"DBpath = {DBpath}\nSearch query = {searchQuery}")
         connection = Connection(DBpath)
         results = [str(res.ID) for res in GetSearchingResult(connection.GetAllHelpers(), searchQuery)]
         if len(results)==0:
-            print()
+            print(" ")
         else:
             print(" ".join(results))
     except:
-        return
+        print(" ")
 
 if __name__ == "__main__":
     main()

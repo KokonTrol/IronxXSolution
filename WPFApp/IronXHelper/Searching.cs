@@ -33,16 +33,24 @@ namespace IronXHelper
                 idString = p.StandardOutput.ReadToEnd();
                 p.Kill();
             }
-
-            IronContext context = new IronContext();
-            idString = Regex.Replace(idString, "[^\\d ]+", "");
-            var ids = idString.Split(" ");
             List<HelperInfo> infos = new List<HelperInfo>();
-            foreach (string id in ids)
+
+            idString = Regex.Replace(idString, "[^\\d ]+", "");
+            if(idString.Length > 1)
             {
-                infos.Add(context.HelperInfo.Where(x => x.Id.ToString() == id).First());
+                IronContext context = new IronContext();
+
+                var ids = idString.Split(" ");
+                foreach (string id in ids)
+                {
+                    infos.Add(context.HelperInfo.Where(x => x.Id.ToString() == id).First());
+                }
+                return Task.Run(() => infos);
             }
-            return Task.Run(() => infos); 
+            else
+            {
+                return Task.Run(() =>  infos );
+            }
         }
     }
 }
