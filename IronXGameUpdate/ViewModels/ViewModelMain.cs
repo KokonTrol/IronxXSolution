@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Library.Models;
 using System.Windows;
 using System.Threading;
+using Library.Functions;
 
 namespace IronXGameUpdate.ViewModel
 {
@@ -127,7 +128,7 @@ namespace IronXGameUpdate.ViewModel
             if (askName.ShowDialog() == true)
             {
                 _admin.Name = askName.newName;
-                //NewLogLine($"Админ {_admin.Name} вошел.");
+                BaseFunctions.NewLogLine($"Админ {_admin.Name} вошел.", 0);
             }
         }
         #endregion
@@ -179,8 +180,8 @@ namespace IronXGameUpdate.ViewModel
                         log = $"Убрано обозначение обновления.\n" + baseLog;
                     }
                     db.SaveChangesAsync();
-                    //if (log != "")
-                    //    NewLogLine(log);
+                    if (log != "")
+                        BaseFunctions.NewLogLine(log, 0);
                     OnPropertyChanged("Updates");
                 }
                 catch { }

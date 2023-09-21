@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IronxXSolution"
         mc:Ignorable="d"
-        Title="Settings" MinHeight="500" Height="650" Width="800">
+        Title="Settings" MinHeight="500" Height="650" Width="800"
+        ShowInTaskbar="False">
     <Grid Background="{StaticResource DarkBlueStyle}">
 
         <TabControl Name="verticalTabControl" TabStripPlacement="Left">

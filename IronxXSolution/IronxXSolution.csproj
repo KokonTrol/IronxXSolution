@@ -9,12 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Library\Library.csproj" />
-    <ProjectReference Include="..\StylesResources\StylesResources.csproj" />
+    <ProjectReference Include="..\StylesResources\StylesResources.csproj">
+      <TreatAsUsed>true</TreatAsUsed>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

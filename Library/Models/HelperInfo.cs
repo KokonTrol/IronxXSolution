@@ -18,6 +18,8 @@ namespace Library.Models
         public string Type { get; set; } = "";
         [NotMapped]
         public List<string> ImagesList { get { return Images.Split(';').ToList(); }}
+        [NotMapped]
+        public List<string> KeysList { get { return Keys.Split(';').ToList(); } }
 
         public HelperInfo(string helperInfoText, string images)
         {
