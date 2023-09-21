@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CGULibrary", "CGULibrary\CG
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "helper", "helper", "{B5275C4A-466F-4E03-9377-2677C8AD67B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronXHelper", "IronXHelper\IronXHelper.csproj", "{D136ADE3-EAEB-4461-B35E-06DF38EEB17D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IronXHelper", "IronXHelper\IronXHelper.csproj", "{D136ADE3-EAEB-4461-B35E-06DF38EEB17D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
