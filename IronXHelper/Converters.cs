@@ -13,15 +13,17 @@ namespace IronXHelper
             BitmapImage bitmapImage;
             try
             {
-                Uri imageUri = new Uri(BaseFunctions.GetDocumentFolder() + "\\Helper\\" + (string)value, UriKind.RelativeOrAbsolute);
-                bitmapImage = new BitmapImage(imageUri);
+                bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.UriSource = new Uri(BaseFunctions.GetDocumentFolder() + "\\Helper\\" + (string)value, UriKind.RelativeOrAbsolute);
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
             }
             catch
             {
                 bitmapImage = new BitmapImage(new Uri("/noimage.jpg", UriKind.Relative)) { CreateOptions = BitmapCreateOptions.IgnoreImageCache };
             }
             return bitmapImage;
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
