@@ -9,6 +9,7 @@
         WindowState="Maximized"
         WindowStyle="None"
         Height="450" Width="800"
+        ShowInTaskbar="False"
         Background="Transparent" KeyDown="ImageToShow_KeyDown">
     <Grid Background="Transparent" MouseUp="Grid_MouseUp">
         <Image x:Name="ImageToShow" Stretch="Uniform" Cursor="Hand"/>
