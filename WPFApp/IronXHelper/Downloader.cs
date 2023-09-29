@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
@@ -21,10 +20,10 @@ namespace IronXHelper
 {
     public static class Downloader
     {
-        private static string path = "IronXHelper";
+        private static string path = "/IronXSolution/IronXHelper"; //IronXSolution/
         private static string fileVer = "HelperVer";
         private static string fileText = "HelperText.json";
-        private static string tempHelperFolder = BaseFunctions.GetDocumentFolder() + "\\TempHelper\\";
+        private static string tempHelperFolder = BaseFunctions.GetDocumentFolder() + "\\TempHelper";
         private static string helperFolder = BaseFunctions.GetDocumentFolder() + "\\Helper\\";
         private static JsonSerializerOptions jsonOptions = new JsonSerializerOptions
         {
@@ -34,17 +33,7 @@ namespace IronXHelper
 
         private static string GetKey()
         {
-            string key;
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "IronXHelper.privateKey";
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    key = reader.ReadToEnd();
-                }
-            }
-            return key;
+            return BaseFunctions.GetStringFileFromResources("privateKey");
         }
 
         private static void DeleteFolder(string folder)
@@ -126,13 +115,12 @@ namespace IronXHelper
             {
                 Path = path,
             }, CancellationToken.None);
-
             IEnumerable<Resource> allFiles =
-                resources.Embedded.Items.Where(item => item.Type == ResourceType.File);
-
+                    resources.Embedded.Items.Where(item => item.Type == ResourceType.File);
             IEnumerable<Task> downloadingTasks =
                 allFiles.Select(file =>
-                  api.Files.DownloadFileAsync(file.Path, localFile: Path.Combine(tempHelperFolder, file.Name)));
+                  api.Files.DownloadFileAsync(path: file.Path,
+                                                  localFile: System.IO.Path.Combine(tempHelperFolder, file.Name))).ToList();
 
             await Task.WhenAll(downloadingTasks);
 
@@ -153,7 +141,7 @@ namespace IronXHelper
             
             try
             {
-                await api.Files.DownloadFileAsync("disk:/" + path + "/" + fileVer, Path.Combine(tempHelperFolder, fileVer));
+                await api.Files.DownloadFileAsync("disk:" + path + "/" + fileVer, Path.Combine(tempHelperFolder, fileVer));
 
                 string helperVer = File.ReadAllText(Path.Combine(tempHelperFolder, fileVer));
 

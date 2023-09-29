@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <None Remove="noimage.jpg" />
-    <None Remove="privateKey" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +21,6 @@
     <Resource Include="noimage.jpg">
       <CustomToolNamespace>IronXHelper</CustomToolNamespace>
     </Resource>
-    <EmbeddedResource Include="privateKey" />
   </ItemGroup>
 
   <ItemGroup>
