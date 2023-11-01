@@ -20,7 +20,7 @@ namespace IronXHelper
 {
     public static class Downloader
     {
-        private static string path = "/IronXSolution/IronXHelper"; //IronXSolution/
+        private static string path = "IronXSolution/IronXHelper"; ///IronXSolution//
         private static string fileVer = "HelperVer";
         private static string fileText = "HelperText.json";
         private static string tempHelperFolder = BaseFunctions.GetDocumentFolder() + "\\TempHelper";
@@ -141,7 +141,7 @@ namespace IronXHelper
             
             try
             {
-                await api.Files.DownloadFileAsync("disk:" + path + "/" + fileVer, Path.Combine(tempHelperFolder, fileVer));
+                await api.Files.DownloadFileAsync("disk:/" + path + "/" + fileVer, Path.Combine(tempHelperFolder, fileVer));
 
                 string helperVer = File.ReadAllText(Path.Combine(tempHelperFolder, fileVer));
 
