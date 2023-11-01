@@ -57,11 +57,22 @@
             <TabItem Tag="games" BorderBrush="Transparent" BorderThickness="0" Header="Игры">
 
                 <TabItem.Content >
-                    <Grid>
-                        <ListBox x:Name="listGames" Grid.Row="0" Grid.Column="0" Background="Transparent" BorderThickness="0"
-                             ItemsSource="{Binding Games}" Style="{StaticResource ResourceKey=listBoxSimple}"/>
+                    <DataGrid x:Name="listGames"  Background="Transparent" BorderThickness="0"
+                          ItemsSource="{Binding Games,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          HorizontalAlignment="Center"
+                          AutoGenerateColumns="False" 
+                          HorizontalContentAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          ColumnHeaderHeight="35"
+                          CanUserAddRows="False"
+                          SelectionMode="Single">
 
-                    </Grid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Игра" Width="*" 
+         Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataGrid.Columns>
+
+                    </DataGrid>
                 </TabItem.Content>
 
             </TabItem>

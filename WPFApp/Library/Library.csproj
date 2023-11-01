@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Resources\DBConfig.json" />
+    <None Remove="Resources\privateKey" />
   </ItemGroup>
 
 
@@ -17,6 +18,9 @@
       <CustomToolNamespace>Resources</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\DBConfig.json">
+      <CustomToolNamespace>Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\privateKey">
       <CustomToolNamespace>Resources</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
