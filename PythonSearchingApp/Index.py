@@ -1,7 +1,6 @@
 from ClearingText import ClearingText
 from Helper import Helper
 
-
 class Index:
     def __init__(self):
         self.index = {}
@@ -17,7 +16,7 @@ class Index:
                 self.index[token] = set()
             self.index[token].add(helper.ID)
     
-    def _results(self, analyzed_query):
+    def results(self, analyzed_query):
         return [self.index.get(token, set()) for token in analyzed_query]
 
     def search(self, query, search_type='AND', rank=True):
@@ -25,13 +24,11 @@ class Index:
             return []
 
         analyzed_query = ClearingText.StartSearching(query)
-        results = self._results(analyzed_query)
+        results = self.results(analyzed_query)
         if search_type == 'AND':
             helpers = [self.helpers[doc_id] for doc_id in set.intersection(*results)]
         if search_type == 'OR':
             helpers = [self.helpers[doc_id] for doc_id in set.union(*results)]
-
-        # return helpers
 
         if rank:
             return [res[0] for res in self.rank(analyzed_query, helpers)]
@@ -45,26 +42,3 @@ class Index:
             score = sum([document.term_frequency(token) for token in analyzed_query])
             results.append((document, score))
         return sorted(results, key=lambda doc: doc[1], reverse=True)
-
-
-    # def document_frequency(self, token):
-    #     l = len(self.index.get(token, set()))
-    #     if (l==0):
-    #         return -1
-    #     return l
-
-    # def inverse_document_frequency(self, token):
-    #     return math.log10(len(self.helpers) / self.document_frequency(token))
-
-    # def rank(self, analyzed_query, helpers):
-    #     results = []
-    #     if not helpers:
-    #         return results
-    #     for document in helpers:
-    #         score = 0.0
-    #         for token in analyzed_query:
-    #             tf = document.term_frequency(token)
-    #             idf = self.inverse_document_frequency(token)
-    #             score += tf * idf
-    #         results.append((document, score))
-    #     return sorted(results, key=lambda doc: doc[1], reverse=True)

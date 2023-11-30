@@ -1,5 +1,6 @@
 from gistPorter import Porter
 import re
+from stopwords import stop_words
 
 class ClearingText(object):
     @classmethod
@@ -16,7 +17,7 @@ class ClearingText(object):
         return text
     @classmethod
     def Tokenize(self, text):
-        return self.ToLowerCase(text).split(" ")
+        return [token for token in self.ToLowerCase(text).split(" ") if token not in stop_words]
 
     @classmethod
     def StartSearching(self, text):
