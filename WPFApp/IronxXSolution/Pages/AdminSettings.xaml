@@ -23,13 +23,11 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Имя" Width="*" 
                              Binding="{Binding Path=Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn Header="Зарплата на смену" Width="Auto" 
-                             Binding="{Binding Path=Salary,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource StringToDouble}}"/>
-                <DataGridCheckBoxColumn Header="Действующий" Width="Auto" 
+                <DataGridCheckBoxColumn Header="Действующий" Width="*" 
                              Binding="{Binding Path=IsActive,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         ElementStyle="{StaticResource customCheckboxStyle}"/>
-                
-                <DataGridTemplateColumn Header="Сбросить пароль" Width="Auto" >
+
+                <DataGridTemplateColumn Header="Сбросить пароль" Width="*"  >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Tag="{Binding Path=Id}" 
