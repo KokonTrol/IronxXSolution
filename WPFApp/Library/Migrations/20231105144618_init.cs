@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Library.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,7 +91,11 @@ namespace Library.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    HelperInfoText = table.Column<string>(type: "TEXT", nullable: false)
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    HelperInfoText = table.Column<string>(type: "TEXT", nullable: false),
+                    Images = table.Column<string>(type: "TEXT", nullable: false),
+                    Keys = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,17 +154,17 @@ namespace Library.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Text = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    AdminId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PcID = table.Column<int>(type: "INTEGER", nullable: true)
+                    AdminId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Logs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Logs_Admin_PcID",
-                        column: x => x.PcID,
+                        name: "FK_Logs_Admin_AdminId",
+                        column: x => x.AdminId,
                         principalTable: "Admin",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,9 +225,9 @@ namespace Library.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Logs_PcID",
+                name: "IX_Logs_AdminId",
                 table: "Logs",
-                column: "PcID");
+                column: "AdminId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transaction_AdminId",

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Migrations
 {
     [DbContext(typeof(IronContext))]
-    [Migration("20230914110147_Init")]
-    partial class Init
+    [Migration("20231105145415_MakeAdminIdNull")]
+    partial class MakeAdminIdNull
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,6 +162,22 @@ namespace Library.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Keys")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("HelperInfo");
@@ -196,14 +212,11 @@ namespace Library.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AdminId")
+                    b.Property<int?>("AdminId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("PcID")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -211,7 +224,7 @@ namespace Library.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PcID");
+                    b.HasIndex("AdminId");
 
                     b.ToTable("Logs");
                 });
@@ -308,7 +321,7 @@ namespace Library.Migrations
                 {
                     b.HasOne("Library.Models.Admin", "Admin")
                         .WithMany()
-                        .HasForeignKey("PcID");
+                        .HasForeignKey("AdminId");
 
                     b.Navigation("Admin");
                 });

@@ -22,12 +22,13 @@ namespace IronXHelper
     {
         private static string path = "IronXSolution/IronXHelper"; ///IronXSolution//
         private static string fileVer = "HelperVer";
-        private static string fileText = "HelperText.json";
+        private static string fileHelperText = "HelperText.json";
+        private static string fileHelperType = "HelperTypes.json";
         private static string tempHelperFolder = BaseFunctions.GetDocumentFolder() + "\\TempHelper";
         private static string helperFolder = BaseFunctions.GetDocumentFolder() + "\\Helper\\";
         private static JsonSerializerOptions jsonOptions = new JsonSerializerOptions
         {
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             WriteIndented = true
         };
 
@@ -61,29 +62,47 @@ namespace IronXHelper
         private static async Task<bool> FillHelperDB()
         {
             List <HelperInfo> tempHelpers;
-            using (FileStream fs = new FileStream(Path.Combine(tempHelperFolder, fileText), FileMode.Open))
+            List<HelperType> tempHelpersType;
+            using (FileStream fs = new FileStream(Path.Combine(tempHelperFolder, fileHelperText), FileMode.Open))
             {
                 try
                 {
                     tempHelpers = await JsonSerializer.DeserializeAsync<List<HelperInfo>>(fs);
-                    tempHelpers.ForEach(x => x.HelperInfoText = x.HelperInfoText.Replace("\\n", "\n"));
+                    //tempHelpers.ForEach(x => x.HelperInfoText = x.HelperInfoText.Replace("\\n", "\n"));
                 }
                 catch (Exception ex)
                 {
                     tempHelpers = new List<HelperInfo>();
                 }
             }
+            using (FileStream fs = new FileStream(Path.Combine(tempHelperFolder, fileHelperType), FileMode.Open))
+            {
+                try
+                {
+                    tempHelpersType = await JsonSerializer.DeserializeAsync<List<HelperType>>(fs);
+                    //tempHelpers.ForEach(x => x.HelperInfoText = x.HelperInfoText.Replace("\\n", "\n"));
+                }
+                catch (Exception ex)
+                {
+                    tempHelpersType = new List<HelperType>();
+                }
+            }
 
             IronContext context = new IronContext();
-            context.HelperInfo.Load();
 
+            context.HelperInfo.Load();
+            context.HelperType.Load();
+
+
+            //temp for helpers text
             {
                 string json = JsonSerializer.Serialize(context.HelperInfo.Select(x => new
                 {
                     x.Title,
                     x.HelperInfoText,
                     x.Images,
-                    x.Type,
+                    x.TypeId,
+                    //x.HelperType,
                     x.Keys
                 }).ToList(),jsonOptions);
                 string tempFolder = BaseFunctions.GetDocumentFolder() + $"\\Temp";
@@ -92,13 +111,38 @@ namespace IronXHelper
                 CreateFolder(tempFolder);
                 File.WriteAllText(tempFolder + tempFile, json);
             }
+            //temp for helpers types
+            {
+                string json = JsonSerializer.Serialize(context.HelperType.Select(x => new
+                {
+                    x.Id,
+                    x.Name
+                }).ToList(), jsonOptions);
+                string tempFolder = BaseFunctions.GetDocumentFolder() + $"\\Temp";
+                string tempFile = $"\\HelperType{DateTime.Now.ToFileTime()}.json";
+
+                CreateFolder(tempFolder);
+                File.WriteAllText(tempFolder + tempFile, json);
+            }
 
 
             context.HelperInfo.RemoveRange(context.HelperInfo.ToList());
+            context.SaveChanges();
+
+            context.HelperType.RemoveRange(context.HelperType.ToList());
+            context.SaveChanges();
+
+
+            //fill types
+            foreach (var content in tempHelpersType)
+            {
+                context.HelperType.Add(content);
+            }
+            context.SaveChanges();
 
             foreach (var content in tempHelpers)
             {
-                context.HelperInfo.Add(content);
+                context.HelperInfo.Add(new HelperInfo(content.HelperInfoText, content.Title, content.Images, content.Keys, content.TypeId)); //content);// 
             }
             context.SaveChanges();
 
@@ -159,7 +203,7 @@ namespace IronXHelper
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Невозможно подключится к источнику.\n{ex.Message}\n{ex}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Невозможно подключиться к источнику.\n{ex.Message}\n{ex}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 DeleteFolder(tempHelperFolder);
                 return false;
             }

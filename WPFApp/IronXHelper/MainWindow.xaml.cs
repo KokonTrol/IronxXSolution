@@ -27,8 +27,9 @@ namespace IronXHelper
         private IEnumerable<HelperInfo> GetHelperInfoList()
         {
             IronContext context = new IronContext();
+            context.HelperType.Load();
             context.HelperInfo.Load();
-            return context.HelperInfo.Local.OrderBy(x => x.Type).ToList();
+            return context.HelperInfo.Local.OrderBy(x => x.TypeId).ToList();
         }
         public IEnumerable<HelperInfo> HelperInfoList { get; set; }
         public MainWindow()

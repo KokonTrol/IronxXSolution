@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Migrations
 {
     [DbContext(typeof(IronContext))]
-    [Migration("20230914130407_AddTitleKeysTypeHelperInfo")]
-    partial class AddTitleKeysTypeHelperInfo
+    [Migration("20231211193412_addForeignTypeForHelpers")]
+    partial class addForeignTypeForHelpers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,9 +36,6 @@ namespace Library.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("Salary")
-                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -174,13 +171,29 @@ namespace Library.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Type")
+                    b.Property<int?>("TypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("HelperInfo");
+                });
+
+            modelBuilder.Entity("Library.Models.HelperType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HelperInfo");
+                    b.ToTable("HelperType");
                 });
 
             modelBuilder.Entity("Library.Models.LaunchersInfo", b =>
@@ -212,14 +225,11 @@ namespace Library.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AdminId")
+                    b.Property<int?>("AdminId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("PcID")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -227,7 +237,7 @@ namespace Library.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PcID");
+                    b.HasIndex("AdminId");
 
                     b.ToTable("Logs");
                 });
@@ -320,11 +330,20 @@ namespace Library.Migrations
                     b.Navigation("Game");
                 });
 
+            modelBuilder.Entity("Library.Models.HelperInfo", b =>
+                {
+                    b.HasOne("Library.Models.HelperType", "HelperType")
+                        .WithMany()
+                        .HasForeignKey("TypeId");
+
+                    b.Navigation("HelperType");
+                });
+
             modelBuilder.Entity("Library.Models.Log", b =>
                 {
                     b.HasOne("Library.Models.Admin", "Admin")
                         .WithMany()
-                        .HasForeignKey("PcID");
+                        .HasForeignKey("AdminId");
 
                     b.Navigation("Admin");
                 });

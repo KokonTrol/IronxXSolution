@@ -69,7 +69,7 @@
                                            x:Name="Title"
                                            TextWrapping="Wrap"/>
                                 <TextBlock FontSize="12"
-                                       Text="{Binding Path=Type}"/>
+                                       Text="{Binding Path=HelperType.Name}"/>
                             </StackPanel>
                         </Border>
                         <DataTemplate.Triggers>

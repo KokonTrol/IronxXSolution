@@ -11,7 +11,6 @@ namespace Library.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; } = "Новый_админ";
-        public double Salary { get; set; } = 0;
         public string Password { get; set; } = "";
         public bool IsActive { get; set; } = true;
 

@@ -1,24 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Library.Models
 {
-    [Table("Logs")]
-    public class Log : INotifyPropertyChanged
+    public class HelperType : INotifyPropertyChanged
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
-        public string Text { get; set; }
-        [Required]
-        public DateTime Date { get; set; } = DateTime.Now;
-        //[Required]
-        public int? AdminId { get; set; }      // внешний ключ
-        [ForeignKey("AdminId")]
-        public virtual Admin? Admin { get; set; } = null;
+        public string Name { get; set; } = "Новый тип";
+        [NotMapped]
+        public List<HelperInfo> HelperInfo { get; set; } = new List<HelperInfo>();
+
 
         #region propertyChangrd
         public event PropertyChangedEventHandler PropertyChanged;

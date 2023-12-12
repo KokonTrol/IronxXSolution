@@ -3,6 +3,7 @@ using System;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Migrations
 {
     [DbContext(typeof(IronContext))]
-    partial class IronContextModelSnapshot : ModelSnapshot
+    [Migration("20231203081952_DeleteAdminSalary")]
+    partial class DeleteAdminSalary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -168,29 +171,13 @@ namespace Library.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("HelperInfo");
-                });
-
-            modelBuilder.Entity("Library.Models.HelperType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HelperType");
+                    b.ToTable("HelperInfo");
                 });
 
             modelBuilder.Entity("Library.Models.LaunchersInfo", b =>
@@ -325,15 +312,6 @@ namespace Library.Migrations
                     b.Navigation("Computer");
 
                     b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("Library.Models.HelperInfo", b =>
-                {
-                    b.HasOne("Library.Models.HelperType", "HelperType")
-                        .WithMany()
-                        .HasForeignKey("TypeId");
-
-                    b.Navigation("HelperType");
                 });
 
             modelBuilder.Entity("Library.Models.Log", b =>

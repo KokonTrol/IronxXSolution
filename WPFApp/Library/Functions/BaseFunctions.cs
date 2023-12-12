@@ -3,10 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System;
-using System.Threading.Tasks;
 using System.Text.Json;
 using System.Reflection;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Functions
 {
@@ -60,6 +59,7 @@ namespace Library.Functions
                 ShowMessage(_errorEnter, MessageBoxImage.Error);
                 return null;
             }
+            context.Database.CloseConnection();
         }
 
         public static bool IsSuperUser(StartupEventArgs e)
@@ -119,7 +119,9 @@ namespace Library.Functions
         public static string GetHelperVer()
         {
             IronContext context = new IronContext();
-            return context.GetConfig().HelperInfoVer;
+            var helperVer = context.GetConfig().HelperInfoVer;
+            context.Database.CloseConnection();
+            return helperVer;
         }
 
         public static void SetHelperVer(string newHelperVer)
@@ -127,13 +129,14 @@ namespace Library.Functions
             IronContext context = new IronContext();
             context.GetConfig().HelperInfoVer = newHelperVer;
             context.SaveChanges();
+            context.Database.CloseConnection();
         }
 
         #region новый лог
-        public static void NewLogLine(string line, int adminId)
+        public static void NewLogLine(string line, int? adminId)
         {
             IronContext db = new IronContext();
-            db.Logs.Add(new Log { Text = line, AdminId = adminId });
+            db.Logs.Add(new Log { Text = line, AdminId = adminId!=null ? adminId : null });
             db.SaveChanges();
         }
         #endregion

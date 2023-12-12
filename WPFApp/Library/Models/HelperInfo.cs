@@ -15,7 +15,9 @@ namespace Library.Models
         public string HelperInfoText { get; set; } = "";
         public string Images { get; set; } = "";
         public string Keys { get; set; } = "";
-        public string Type { get; set; } = "";
+        public int? TypeId { get; set; }
+        [ForeignKey("TypeId")]
+        public HelperType? HelperType { get; set; } = null;
         [NotMapped]
         public List<string> ImagesList { get { return Images.Split(';').ToList(); }}
         [NotMapped]
@@ -25,6 +27,14 @@ namespace Library.Models
         {
             HelperInfoText = helperInfoText;
             Images = images;
+        }
+        public HelperInfo(string helperInfoText, string title, string images, string keys, int? typeId)
+        {
+            HelperInfoText = helperInfoText;
+            Images = images;
+            Keys = keys;
+            TypeId = typeId;
+            Title = title;
         }
         public HelperInfo() { }
 
