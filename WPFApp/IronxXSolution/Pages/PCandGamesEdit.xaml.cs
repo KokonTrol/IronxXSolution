@@ -142,7 +142,7 @@ namespace IronxXSolution.Pages
 
                         log = $"Добавление новой игры в базу. Игра: {newGame.Name}.";
                     }
-                    BaseFunctions.NewLogLine(log, 0);
+                    BaseFunctions.NewLogLine(log, null);
                     OnPropertyChanged("Games");
                     OnPropertyChanged("PC");
                 }
@@ -186,7 +186,7 @@ namespace IronxXSolution.Pages
 
                     log = $"Удаление информации о лаунчере из базы.\nID: {launcher.Id}; Лаунчер: {launcher.Name}.";
                 }
-                BaseFunctions.NewLogLine(log, 0);
+                BaseFunctions.NewLogLine(log, null);
                 OnPropertyChanged("Games");
                 OnPropertyChanged("PC");
                 OnPropertyChanged("Launchers");
