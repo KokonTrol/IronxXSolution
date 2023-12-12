@@ -18,7 +18,7 @@ class HelperInfo(Base):
     Images = Column(String)
     Keys = Column(String)
     Title = Column(String)
-    Type = Column(String)
+    TypeId = Column(Integer)
 
 class Connection:
     def __init__(self, pathToDB):

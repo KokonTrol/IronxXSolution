@@ -1,7 +1,7 @@
 from Index import Index
 from DBContext import Connection
 import sys
-# python script.py -DBpath="D:\Documents\IronXSolution\ironXsolutionDB" -query="не запускается кс требует обновить стим"
+# python script.py -DBpath="C:\Users\Kokon\Documents\IronXSolution\ironXsolutionDB" -query="не запускается кс требует обновить стим"
 # pyinstaller --onefile script.py
 def GetSearchingResult(dictionary, query):
     index = Index()
@@ -13,7 +13,6 @@ def main():
     try:
         DBpath = sys.argv[1].replace("-DBpath=", "")
         searchQuery = sys.argv[2].replace("-query=", "")
-        #print(f"DBpath = {DBpath}\nSearch query = {searchQuery}")
         connection = Connection(DBpath)
         results = [str(res.ID) for res in GetSearchingResult(connection.GetAllHelpers(), searchQuery)]
         if len(results)==0:
