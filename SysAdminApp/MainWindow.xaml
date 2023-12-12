@@ -1,0 +1,191 @@
+﻿<Window x:Class="SysAdminApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SysAdminApp"
+        mc:Ignorable="d"
+        Title="Редактирование текстов-помощников" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <Button x:Name="SaveDBHelper" 
+                        Content="Сохранить" Height="40" Margin="-5 0 -30 0" Click="SaveDBHelper_Click"/>
+                <Button x:Name="AddHelper" 
+                        Content="Добавить" Height="40" Click="AddHelper_Click"/>
+                <Button x:Name="DeleteHelper"
+                        Content="Удалить" Height="40" Click="DeleteHelper_Click"/>
+            </StackPanel>
+
+            <Button Content="Создать JSON" Height="40" 
+                    Width="250" Grid.Column="1" x:Name="SaveUpdateButton" Click="SaveUpdateButton_Click"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="{StaticResource DarkBlueStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+            <ListBox Grid.Column="0" Width="Auto"
+                     x:Name="HelperList"
+                     Style="{StaticResource listBoxSimple}"
+                     ItemsSource="{Binding HelperInfoList}"
+                     SelectionMode="Single">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border Background="{StaticResource LightStyle}"
+                                CornerRadius="16" Padding="15"
+                                x:Name="Border"
+                                Margin="5"
+                                Cursor="Hand">
+                            <StackPanel HorizontalAlignment="Left" Height="Auto"
+                                    Width="200" MaxWidth="200">
+                                <TextBlock FontSize="{StaticResource HeaderFontSize}"
+                                       FontWeight="Bold"
+                                       Text="{Binding Path=Title, Mode=TwoWay, 
+                            UpdateSourceTrigger=PropertyChanged}"
+                                           Foreground="White"
+                                           x:Name="Title"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                        <DataTemplate.Triggers>
+                            <DataTrigger
+                                    Binding="{Binding
+                                        RelativeSource={RelativeSource
+                                            Mode=FindAncestor,
+                                            AncestorType={x:Type ListBoxItem}},
+                                            Path=IsSelected}"
+                                    Value="True">
+                                <Setter Property="Background" TargetName="Border"
+                                        Value="{StaticResource OrangeStyle}" />
+                                <Setter Property="FontSize" TargetName="Title"
+                                        Value="{StaticResource TitleFontSize}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Grid Grid.Column="1">
+                <Border CornerRadius="16" Margin="15" Padding="10"
+                        Background="{StaticResource LightBlueStyle}">
+                    <ScrollViewer DataContext="{Binding ElementName=HelperList, Path=SelectedItem, Mode=TwoWay}"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="20">
+                            <StackPanel Margin="0 0 0 20">
+                                <TextBlock Text="Заголовок"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontWeight="Bold"/>
+                                <TextBox Width="Auto"
+                                         Text="{Binding Path=Title, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <TextBlock Text="Текст (решение)"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontWeight="Bold"/>
+                                <TextBox Width="Auto"
+                                         Text="{Binding Path=HelperInfoText, Mode=TwoWay}"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"/>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <TextBlock Text="Изображения (через ;)"
+                                   FontSize="16"
+                                   Foreground="White"
+                                   FontWeight="Bold"/>
+                                <TextBox Width="Auto"
+                                     Text="{Binding Path=Images, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <TextBlock Text="Ключи (через ;)"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontWeight="Bold"/>      
+                                <TextBox Width="Auto"
+                                        Text="{Binding Path=Keys, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 0 20">
+                                <TextBlock Text="Группа"
+                                       FontSize="16"
+                                       Foreground="White"
+                                       FontWeight="Bold"/>
+                                <ComboBox ItemsSource="{Binding ElementName=TypesList, Path=ItemsSource}" 
+                                          DisplayMemberPath="Name" SelectedValuePath="Id" 
+                                          SelectedValue="{Binding Path=TypeId}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+
+            </Grid>
+            
+            <Grid Grid.Column="2" >
+                <Grid.RowDefinitions>
+                    <RowDefinition  Height="*"/>
+                    <RowDefinition  Height="Auto"/>
+                    <RowDefinition  Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox Width="Auto" Grid.Row="0"
+                             x:Name="TypesList"
+                             ItemsSource="{Binding HelperTypeList, 
+                            UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource listBoxSimple}"
+                             SelectionMode="Single">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border Background="{StaticResource LightStyle}"
+                                CornerRadius="16" Padding="15"
+                                x:Name="Border"
+                                Margin="5"
+                                Cursor="Hand">
+                                <StackPanel HorizontalAlignment="Left" Height="Auto"
+                Width="160" MaxWidth="160">
+                                    <TextBox
+                                   FontWeight="Bold"
+                                        MaxWidth="140"
+                                   Text="{Binding Path=Name, Mode=TwoWay}"
+                                       Foreground="Black"
+                                       x:Name="NameType"/>
+                                </StackPanel>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger
+                Binding="{Binding
+                    RelativeSource={RelativeSource
+                        Mode=FindAncestor,
+                        AncestorType={x:Type ListBoxItem}},
+                        Path=IsSelected}"
+                Value="True">
+                                    <Setter Property="Background" TargetName="Border"
+                    Value="{StaticResource OrangeStyle}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button x:Name="AddType" Grid.Row="1"
+        Content="Добавить" Height="40" Click="AddType_Click"/>
+                <Button x:Name="DeleteType" Grid.Row="2" 
+        Content="Удалить" Height="40" Click="DeleteType_Click"/>
+            </Grid>
+            
+        </Grid>
+    </Grid>
+</Window>
