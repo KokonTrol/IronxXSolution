@@ -24,9 +24,9 @@ namespace IronXHelper
         #endregion
 
 
+        IronContext context;
         private IEnumerable<HelperInfo> GetHelperInfoList()
         {
-            IronContext context = new IronContext();
             context.HelperType.Load();
             context.HelperInfo.Load();
             return context.HelperInfo.Local.OrderBy(x => x.TypeId).ToList();
@@ -34,9 +34,14 @@ namespace IronXHelper
         public IEnumerable<HelperInfo> HelperInfoList { get; set; }
         public MainWindow()
         {
+            
             InitializeComponent();
             DataContext = this;
+            context = new IronContext();
+            context.HelperType.Load();
+            context.HelperInfo.Load();
             HelperInfoList = GetHelperInfoList();
+            ListTypes.ItemsSource = context.HelperType.Local.ToList();
             if (HelperInfoList.Count() == 0)
             {
                 UpdateHelper();
@@ -117,6 +122,20 @@ namespace IronXHelper
             {
                 FindHelpsButton_Click(null, null);
             }
+        }
+
+        private void ListTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //IronContext context = new IronContext();
+            HelperInfoList = context.HelperInfo.Local.Where(x=>x.HelperType==((HelperType)ListTypes.SelectedItem)).ToList();
+            OnPropertyChanged("HelperInfoList");
+
+        }
+
+        private void Label_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            HelperInfoList = context.HelperInfo.Local.ToList();
+            OnPropertyChanged("HelperInfoList");
         }
     }
 }

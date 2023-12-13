@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SysAdminApp"
         mc:Ignorable="d"
-        Title="Редактирование текстов-помощников" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="Редактирование текстов-помощников" MinHeight="550" MinWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -85,13 +86,13 @@
                     <ScrollViewer DataContext="{Binding ElementName=HelperList, Path=SelectedItem, Mode=TwoWay}"
                                   HorizontalScrollBarVisibility="Disabled"
                                   VerticalScrollBarVisibility="Auto">
-                        <StackPanel Margin="20">
+                        <StackPanel Margin="20" x:Name="EditPanel">
                             <StackPanel Margin="0 0 0 20">
                                 <TextBlock Text="Заголовок"
                                        FontSize="16"
                                        Foreground="White"
                                        FontWeight="Bold"/>
-                                <TextBox Width="Auto"
+                                <TextBox Width="Auto" SpellCheck.IsEnabled="True" Language="ru-ru"
                                          Text="{Binding Path=Title, Mode=TwoWay}"/>
                             </StackPanel>
                             <StackPanel Margin="0 0 0 20">
@@ -99,7 +100,7 @@
                                        FontSize="16"
                                        Foreground="White"
                                        FontWeight="Bold"/>
-                                <TextBox Width="Auto"
+                                <TextBox Width="Auto" x:Name="HelperText" SpellCheck.IsEnabled="True" Language="ru-ru"
                                          Text="{Binding Path=HelperInfoText, Mode=TwoWay}"
                                          TextWrapping="Wrap"
                                          AcceptsReturn="True"/>
@@ -116,9 +117,22 @@
                                 <TextBlock Text="Ключи (через ;)"
                                        FontSize="16"
                                        Foreground="White"
-                                       FontWeight="Bold"/>      
-                                <TextBox Width="Auto"
-                                        Text="{Binding Path=Keys, Mode=TwoWay}"/>
+                                       FontWeight="Bold"/>
+                                <Grid VerticalAlignment="Top"
+                                            HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Width="Auto" Grid.Column="0" x:Name="Keys"
+                                        Text="{Binding Path=Keys, Mode=TwoWay}" SpellCheck.IsEnabled="True" Language="ru-ru"
+                                             TextWrapping="Wrap" Cursor=""/>
+                                    <Button Grid.Column="1" x:Name="ButtonFinKeys"
+                                            Content="Авто"
+                                            VerticalAlignment="Top" Margin="-10 0 -20 0" 
+                                            Click="ButtonFinKeys_Click"/>
+                                </Grid>
+                                
                             </StackPanel>
                             <StackPanel Margin="0 0 0 20">
                                 <TextBlock Text="Группа"

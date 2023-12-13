@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using System.Threading.Tasks;
 using System.Windows;
 namespace SysAdminApp
 {
@@ -96,6 +97,22 @@ namespace SysAdminApp
                     File.WriteAllText(folderPath + "\\HelperVer", askNames.HelperVer.Text);
                 }
             }
+        }
+
+        private async Task Searching(string searchText)
+        {
+            HelperList.IsEnabled = false;
+            await Task<bool>.Run(async () =>
+               await FindKeys.GetKeys(searchText)).ContinueWith(t =>
+               {
+                   Keys.Text = t.Result;
+                   HelperList.IsEnabled = true;
+               }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        private async void ButtonFinKeys_Click(object sender, RoutedEventArgs e)
+        {
+            await Searching(HelperText.Text);
+
         }
     }
 }

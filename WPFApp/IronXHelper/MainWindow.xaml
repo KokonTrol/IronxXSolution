@@ -33,7 +33,18 @@
                          VerticalContentAlignment="Center" KeyUp="SearchPanelBox_KeyUp"/>
                 <Button x:Name="FindHelpsButton" 
                         Content="Найти" Height="40"
+                        Margin="-15 0 0 0"
                         Click="FindHelpsButton_Click"/>
+                <TextBlock Text="Группа:"
+                           Margin="-5 0 10 0"/>
+                <ComboBox x:Name="ListTypes" 
+                          Width="120" 
+                          Height="35" 
+                          VerticalContentAlignment="Center"
+                          SelectionChanged="ListTypes_SelectionChanged"/>
+                <Label Content="X" VerticalAlignment="Center" 
+                       MouseUp="Label_MouseUp"
+                       Cursor="Hand"/>
             </StackPanel>
             
             <Button Content="Проверить обновление" Height="40" 
