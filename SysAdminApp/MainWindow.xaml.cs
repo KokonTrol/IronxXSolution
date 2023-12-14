@@ -99,11 +99,11 @@ namespace SysAdminApp
             }
         }
 
-        private async Task Searching(string searchText)
+        private async Task Searching(int searchId)
         {
             HelperList.IsEnabled = false;
             await Task<bool>.Run(async () =>
-               await FindKeys.GetKeys(searchText)).ContinueWith(t =>
+               await FindKeys.GetKeys(searchId)).ContinueWith(t =>
                {
                    Keys.Text = t.Result;
                    HelperList.IsEnabled = true;
@@ -111,7 +111,7 @@ namespace SysAdminApp
         }
         private async void ButtonFinKeys_Click(object sender, RoutedEventArgs e)
         {
-            await Searching(HelperText.Text);
+            await Searching(((HelperInfo)HelperList.SelectedItem).Id);
 
         }
     }
