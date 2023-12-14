@@ -70,6 +70,7 @@ namespace IronXGameUpdate.ViewModel
             get
             {
                 db = new IronContext();
+                db.LaunchersInfos.Load();
                 db.Games.Load();
                 return db.Games.ToList().OrderBy(g => g.Name).ToList();
             }

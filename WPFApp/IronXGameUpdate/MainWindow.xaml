@@ -72,7 +72,7 @@
                                                FontWeight="Bold" 
                                                HorizontalContentAlignment="Center" 
                                                VerticalContentAlignment="Center"
-                                               ToolTip="{Binding Path=Name}"/>
+                                               ToolTip="{Binding Path=LaunchersInfo.Name}"/>
 
                                     </Border>
                                 </DataTemplate>

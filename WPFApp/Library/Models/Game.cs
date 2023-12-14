@@ -13,6 +13,9 @@ namespace Library.Models
         [Required]
         public string Name { get; set; }
         //public int? Number { get; set; }
+        public int? LauncherId { get; set; }
+        [ForeignKey("LauncherId")]
+        public LaunchersInfo? LaunchersInfo { get; set; } = null;
 
         #region propertyChangrd
         public event PropertyChangedEventHandler PropertyChanged;

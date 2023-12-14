@@ -11,6 +11,7 @@ namespace Library.Models
     /* For Migrations
      EntityFrameworkCore\Add-Migration <migrationName>
     Update-Database
+    Remove-Migration
      */
     public class IronContext : DbContext
     {
