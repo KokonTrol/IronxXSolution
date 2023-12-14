@@ -18,6 +18,10 @@ namespace Library.Models
         [NotMapped]
         public List<HelperInfo> HelperInfo { get; set; } = new List<HelperInfo>();
 
+        public override string ToString()
+        {
+            return Name;
+        }
 
         #region propertyChangrd
         public event PropertyChangedEventHandler PropertyChanged;

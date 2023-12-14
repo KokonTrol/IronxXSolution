@@ -128,7 +128,7 @@ namespace IronXGameUpdate.ViewModel
             if (askName.ShowDialog() == true)
             {
                 _admin.Name = askName.newName;
-                BaseFunctions.NewLogLine($"Админ {_admin.Name} вошел.", 0);
+                BaseFunctions.NewLogLine($"Админ {_admin.Name} вошел.", null);
             }
         }
         #endregion
@@ -181,7 +181,7 @@ namespace IronXGameUpdate.ViewModel
                     }
                     db.SaveChangesAsync();
                     if (log != "")
-                        BaseFunctions.NewLogLine(log, 0);
+                        BaseFunctions.NewLogLine(log, null);
                     OnPropertyChanged("Updates");
                 }
                 catch { }
