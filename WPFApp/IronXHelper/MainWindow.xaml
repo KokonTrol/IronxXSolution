@@ -30,7 +30,10 @@
                     Margin="10 10 0 10" FontSize="14"
                          HorizontalContentAlignment="Stretch"
                          Width="200" 
-                         VerticalContentAlignment="Center" KeyUp="SearchPanelBox_KeyUp"/>
+                         VerticalContentAlignment="Center" 
+                         
+                         KeyUp="SearchPanelBox_KeyUp" 
+                         PreviewMouseDown="SearchPanelBox_MouseDown"/>
                 <Button x:Name="FindHelpsButton" 
                         Content="Найти" Height="40"
                         Margin="-15 0 0 0"
@@ -143,16 +146,11 @@
                                 </ListView.ItemsPanel>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border CornerRadius="10" Padding="11 3"
-                                                MinWidth="50"
-                                                Background="{StaticResource LightStyle}"
-                                                Margin="0 2 7 2">
-                                            <TextBlock Text="{Binding}"
-                                                       VerticalAlignment="Center"
-                                                       HorizontalAlignment="Center"
-                                                       Foreground="White"
-                                                       FontSize="{StaticResource MainFontSize}"/>
-                                        </Border>
+                                        <Button Content="{Binding}" Width="Auto" MinWidth="50"
+                                                FontSize="{StaticResource MainFontSize}"
+                                                Margin="-20 0 -20 -5"
+                                                x:Name="KeyButton"
+                                                Click="KeyButton_Click"/>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>

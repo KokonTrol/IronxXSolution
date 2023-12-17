@@ -137,5 +137,22 @@ namespace IronXHelper
             HelperInfoList = context.HelperInfo.Local.ToList();
             OnPropertyChanged("HelperInfoList");
         }
+
+        private void KeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            string key = ((Button)sender).Content.ToString();
+            SearchPanelBox.Text = "Ключ:" + key;
+            HelperInfoList = context.HelperInfo.Local.Where(x => x.KeysList.Contains(key)).ToList();
+            OnPropertyChanged("HelperInfoList");
+        }
+
+        private void SearchPanelBox_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (SearchPanelBox.Text != "")
+            {
+                SearchPanelBox.Text = "";
+                FindHelpsButton_Click(null, null);
+            }
+        }
     }
 }
